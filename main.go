@@ -30,14 +30,12 @@ func createUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Принимаем данные из формы
 	err := r.ParseForm()
 	if err != nil {
 		http.Error(w, "Error parsing form data", http.StatusBadRequest)
 		return
 	}
 
-	// Получаем значения из формы
 	username := r.FormValue("username")
 	password := r.FormValue("password")
 	email := r.FormValue("email")
@@ -49,7 +47,6 @@ func createUser(w http.ResponseWriter, r *http.Request) {
 		CreatedAt: time.Now(),
 	}
 
-	// Сохраняем пользователя в базе данных MongoDB
 	result, err := db.Collection("users").InsertOne(r.Context(), newUser)
 	if err != nil {
 		log.Fatal(err)
