@@ -79,6 +79,7 @@ require (
 	github.com/google/uuid v1.5.0 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.3.2 // indirect
 	github.com/googleapis/gax-go/v2 v2.12.0 // indirect
+	github.com/gorilla/mux v1.8.1 // indirect
 	github.com/gsterjov/go-libsecret v0.0.0-20161001094733-a6f4afe4910c // indirect
 	github.com/hailocab/go-hostpool v0.0.0-20160125115350-e80d13ce29ed // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
@@ -119,6 +120,7 @@ require (
 	github.com/mtibben/percent v0.2.1 // indirect
 	github.com/mutecomm/go-sqlcipher/v4 v4.4.2 // indirect
 	github.com/nakagami/firebirdsql v0.9.6 // indirect
+	github.com/natefinch/lumberjack v2.0.0+incompatible // indirect
 	github.com/neo4j/neo4j-go-driver v1.8.3 // indirect
 	github.com/pierrec/lz4/v4 v4.1.19 // indirect
 	github.com/pkg/browser v0.0.0-20240102092130-5ac0b6a4141c // indirect

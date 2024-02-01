@@ -1,0 +1,46 @@
+time="2024-01-29T20:29:39+06:00" level=info msg="User created successfully" action=createUser insertedID="ObjectID(\"65b7b6535eb804b6717679c9\")" status=success
+time="2024-01-29T20:56:56+06:00" level=info msg="User created successfully" action=createUser insertedID="ObjectID(\"65b7bcb87fcf255b02e944c0\")" status=success
+time="2024-01-31T11:58:57+06:00" level=info msg="User created successfully" action=createUser insertedID="ObjectID(\"65b9e1a11cb66154260b41ab\")" status=success
+time="2024-01-31T12:10:06+06:00" level=info msg="User login successfully" action=login loginID=65b9e1a11cb66154260b41ab status=success
+time="2024-01-31T22:19:34+06:00" level=info msg="User login successfully" action=login loginID=65b9e1a11cb66154260b41ab status=success
+time="2024-01-31T22:20:53+06:00" level=info msg="User login successfully" action=login loginID=65b9e1a11cb66154260b41ab status=success
+time="2024-02-01T13:53:05+06:00" level=info msg="User login successfully" action=login loginID=65b9e1a11cb66154260b41ab status=success
+time="2024-02-01T21:41:23+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-01T21:41:32+06:00" level=info msg="User login successfully" action=login loginID=65b9e1a11cb66154260b41ab status=success
+time="2024-02-01T21:41:32+06:00" level=info msg="User on the market page" action=registerPage status=success
+time="2024-02-01T21:41:32+06:00" level=info msg="Data was printed" action=marketCards status=success
+time="2024-02-01T21:41:36+06:00" level=info msg="Data was printed" action=marketCards status=success
+time="2024-02-01T21:41:37+06:00" level=info msg="Data was printed" action=marketCards status=success
+time="2024-02-01T21:41:38+06:00" level=info msg="Data was printed" action=marketCards status=success
+time="2024-02-01T21:41:39+06:00" level=info msg="Data was printed" action=marketCards status=success
+time="2024-02-01T21:41:40+06:00" level=info msg="Data was printed" action=marketCards status=success
+time="2024-02-01T21:41:40+06:00" level=info msg="Data was printed" action=marketCards status=success
+time="2024-02-01T21:41:41+06:00" level=info msg="Data was printed" action=marketCards status=success
+time="2024-02-01T21:41:42+06:00" level=info msg="Data was printed" action=marketCards status=success
+time="2024-02-01T22:33:03+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-01T22:33:22+06:00" level=info msg="User created successfully" action=createUser insertedID="ObjectID(\"65bbc7d27ee821d94e8cfc91\")" status=success
+time="2024-02-01T22:33:23+06:00" level=info msg="User on the market page" action=registerPage status=success
+time="2024-02-01T22:33:23+06:00" level=info msg="Data was printed" action=marketCards status=success
+time="2024-02-01T22:34:13+06:00" level=info msg="Data was filtered by Manager" action=marketCards filter=Manager status=success
+time="2024-02-01T22:34:18+06:00" level=info msg="Data was filtered by Manager" action=marketCards filter=Manager status=success
+time="2024-02-01T22:34:21+06:00" level=info msg="Data was filtered by Manager" action=marketCards filter=Manager status=success
+time="2024-02-01T22:36:29+06:00" level=info msg="User on the market page" action=registerPage status=success
+time="2024-02-01T22:36:29+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-01T22:36:42+06:00" level=info msg="Data was filtered by Manager" action=marketCards filter=Manager page=1 status=success
+time="2024-02-01T22:36:47+06:00" level=info msg="Data was filtered by Manager" action=marketCards filter=Manager page=2 status=success
+time="2024-02-01T22:45:01+06:00" level=info msg="User on the market page" action=registerPage status=success
+time="2024-02-01T22:45:01+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-01T22:45:05+06:00" level=info msg="Data was printed" action=marketCards page=2 status=success
+time="2024-02-01T22:46:25+06:00" level=info msg="User on the market page" action=registerPage status=success
+time="2024-02-01T22:46:25+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-01T22:46:28+06:00" level=info msg="Data was printed" action=marketCards page=2 status=success
+time="2024-02-01T22:46:30+06:00" level=info msg="Data was printed" action=marketCards page=3 status=success
+time="2024-02-01T22:46:38+06:00" level=info msg="Data was filtered by Defender" action=marketCards filter=Defender page=1 status=success
+time="2024-02-01T22:46:47+06:00" level=info msg="Data was filtered by Defender" action=marketCards filter=Defender page=2 status=success
+time="2024-02-01T22:47:09+06:00" level=info msg="Data was filtered by Forward" action=marketCards filter=Forward page=1 status=success
+time="2024-02-01T22:47:23+06:00" level=info msg="Data was sorted by card_id.name and filtered by Forward" action=marketCards filter=Forward page=1 sortBy=card_id.name status=success
+time="2024-02-01T22:47:58+06:00" level=info msg="Data was sorted by card_id.card_id and filtered by Forward" action=marketCards filter=Forward page=1 sortBy=card_id.card_id status=success
+time="2024-02-01T22:48:08+06:00" level=info msg="Data was sorted by card_id.card_id and filtered by Forward" action=marketCards filter=Forward page=2 sortBy=card_id.card_id status=success
+time="2024-02-01T22:48:16+06:00" level=info msg="User on the market page" action=registerPage status=success
+time="2024-02-01T22:48:16+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-01T22:48:18+06:00" level=info msg="Data was sorted by card_id.name" action=marketCards page=1 sortBy=card_id.name status=success
