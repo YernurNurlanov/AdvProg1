@@ -1013,13 +1013,13 @@ func handleRequests() {
 }
 func main() {
 	// connection with db
-	clientOptions := options.Client().ApplyURI("mongodb://127.0.0.1:27017/")
+	clientOptions := options.Client().ApplyURI("mongodb+srv://yernur:1118793421@cluster0.7w9s0t2.mongodb.net/")
 	client, err := mongo.Connect(context.TODO(), clientOptions)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer client.Disconnect(context.TODO())
-	db = client.Database("football_tools")
+	db = client.Database("Football_Manager")
 	//
 	ctx := context.Background()
 	go updateCollectionPeriodically(ctx)
