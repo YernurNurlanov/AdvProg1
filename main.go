@@ -1013,7 +1013,7 @@ func handleRequests() {
 }
 func main() {
 	// connection with db
-	clientOptions := options.Client().ApplyURI("mongodb+srv://yernur:1118793421@cluster0.7w9s0t2.mongodb.net/")
+	clientOptions := options.Client().ApplyURI("mongodb+srv://yernur:1118793421@cluster0.7w9s0t2.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 	client, err := mongo.Connect(context.TODO(), clientOptions)
 	if err != nil {
 		log.Fatal(err)
