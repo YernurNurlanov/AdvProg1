@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Football Manager</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('https://wallpapercave.com/wp/wp10054836.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            margin: 0;
+            padding: 20px;
+            padding-top: 0px;
+        }
+
+        header {
+            text-align: center;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            color: #fff;
+            text-shadow: 1px 1px 8px rgba(0,0,0,0.7);
+        }
+
+        .team-management, .card-collection {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,.1);
+            padding: 20px;
+        }
+
+        .formation .line, .card-collection {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+
+				#manager {
+						margin-left: auto;
+				}
+
+        .drop-zone {
+						width: 120px;
+            height: 180px;
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+
+        .card {
+            display: inline-block;
+            width: 120px;
+            height: 180px;
+            background: #007bff;
+            color: white;
+            text-align: center;
+            line-height: 180px;
+            border-radius: 8px;
+            margin: 0 10px 10px 0;
+            cursor: grab;
+            overflow: auto;
+            line-height: 1.2;
+            white-space: normal;
+        }
+
+        .layout-container {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .team-management {
+            flex: 1; 
+            margin-right: 20px; 
+        }
+
+        .card-collection {
+            flex: 1;
+        }
+  
+    </style>
+</head>
+<body>
+	<header>
+			<h1>Collection</h1>
+	</header>
+	<button onclick="homePage()">Home page</button>
+	<div class="layout-container">
+    <div class="team-management">
+        <div class="formation">
+            <div id="Forward" class="line forwards">
+                <div id="leftForward" class="drop-zone"></div>
+                <div id="centerForward" class="drop-zone"></div>
+                <div id="rightForward" class="drop-zone"></div>
+            </div>
+            <div id="Midfielder" class="line midfielders">
+                <div id="leftMidfielder" class="drop-zone"></div>
+                <div id="centerMidfielder" class="drop-zone"></div>
+                <div id="rightMidfielder" class="drop-zone"></div>
+            </div>
+            <div id="Defender" class="line defenders">
+                <div id="leftDefender" class="drop-zone"></div>
+                <div id="leftCenterDefender" class="drop-zone"></div>
+                <div id="rightCenterDefender" class="drop-zone"></div>
+                <div id="rightDefender" class="drop-zone"></div>
+            </div>
+            <div id="Goalkeeper" class="line goalkeeper">
+                <div id="goalkeeper" class="drop-zone"></div>
+            </div>
+						<div id="Manager" class="line manager">
+								<div id="manager" class="drop-zone"></div>
+						</div>
+        </div>
+				<button id="saveTeamButton">Save Team</button>
+    </div>
+    <div class="card-collection">
+        <div class="cards">
+					{{ with index . 1 }}
+            {{ with .Card_id }}
+                {{ range . }}
+                    <div class="card" draggable="true" data-player-id="{{ .Card_id }}">
+											<p>{{ .Name }}</p>
+											<p>{{ .Position }}</p>
+										</div>
+                {{ end }}
+            {{ end }}
+					{{ end }}
+        </div>
+    </div>
+</div>
+<script>
+	function homePage() {
+			console.log("dewdcwecfewfc")
+		}
+	// saved card to zones
+	function fetchPlayersData() {
+    fetch('/getTeam?user_id={{ .User_id }}',{
+			method: "POST"
+		})
+		.then(response => response.json())
+		.then(data => {
+				if(data.error) { alert(data.error); }
+				else { placePlayersInZones(data); }
+		})
+		.catch(error => {
+				console.error('There was a problem with the fetch operation:', error);
+		});
+	}
+	document.addEventListener('DOMContentLoaded', fetchPlayersData);
+	function placePlayersInZones(data) {
+    data.forEach(playerData => {
+        const { playerId, position } = playerData;
+        const playerCard = document.querySelector(`.card[data-player-id="${playerId}"]`);
+        const zone = document.getElementById(position);
+
+        if (playerCard && zone) {
+            zone.appendChild(playerCard);
+        }
+    });
+	}
+	// move card to zone
+	document.addEventListener('DOMContentLoaded', () => {
+    const cards = document.querySelectorAll('.card');
+    let draggedCard = null;
+
+    // Enable dragging for each card
+    cards.forEach(card => {
+        card.addEventListener('dragstart', (e) => {
+            draggedCard = card;
+            setTimeout(() => card.classList.add('dragging'), 0);
+        });
+
+        card.addEventListener('dragend', () => {
+            draggedCard = null;
+            card.classList.remove('dragging');
+        });
+    });
+
+    const dropZones = document.querySelectorAll('.drop-zone');
+
+    // Enable each drop zone to accept cards
+    dropZones.forEach(zone => {
+        zone.addEventListener('dragover', (e) => {
+            e.preventDefault(); // Necessary to allow dropping
+            zone.classList.add('hover');
+        });
+
+        zone.addEventListener('dragleave', () => {
+            zone.classList.remove('hover');
+        });
+
+        zone.addEventListener('drop', (e) => {
+						e.preventDefault();
+						if (draggedCard) { // Check if a card is being dragged
+								const zoneId = zone.id; // Получаем ID зоны
+								const draggedPosition = draggedCard.querySelector('p:nth-child(2)').textContent.trim(); // Получаем позицию игрока
+
+								// Преобразуем ID зоны в соответствующую строку позиции
+								let zonePosition = '';
+								if (zoneId === 'leftForward' || zoneId === 'centerForward' || zoneId === 'rightForward') {
+										zonePosition = 'Forward';
+								} else if (zoneId === 'leftMidfielder' || zoneId === 'centerMidfielder' || zoneId === 'rightMidfielder') {
+										zonePosition = 'Midfielder';
+								} else if (zoneId === 'leftDefender' || zoneId === 'leftCenterDefender' || zoneId === 'rightCenterDefender' || zoneId === 'rightDefender') {
+										zonePosition = 'Defender';
+								} else if (zoneId === 'goalkeeper') {
+										zonePosition = 'Goalkeeper';
+								} else if (zoneId === 'manager') {
+										zonePosition = 'Manager';
+								}
+
+								if (draggedPosition === zonePosition) { // Проверяем, соответствует ли позиция игрока позиции зоны
+										const existingCards = zone.querySelectorAll('.card'); // Получаем все карты в зоне
+										if (existingCards.length === 0) { // Если в зоне нет других карт
+												zone.appendChild(draggedCard); // Добавляем карту в новую зону
+										} else {
+												// Получаем контейнер для карт
+												const cardContainer = document.querySelector('.card-collection .cards');
+												// Получаем первую карту в контейнере
+												cardContainer.appendChild(existingCards[0]);
+										}
+								}
+								zone.classList.remove('hover');
+						}
+				});
+    });
+    // Enable each card to be dragged back to the card collection
+    cards.forEach(card => {
+        card.addEventListener('dragover', (e) => {
+            e.preventDefault(); // Necessary to allow dropping
+            card.classList.add('hover');
+        });
+
+        card.addEventListener('dragleave', () => {
+            card.classList.remove('hover');
+        });
+
+        card.addEventListener('drop', (e) => {
+            e.preventDefault();
+            if (draggedCard) { // Check if a card is being dragged
+                card.parentNode.insertBefore(draggedCard, card);
+                card.classList.remove('hover');
+            }
+        });
+    });
+    // Save team button click event
+    document.getElementById('saveTeamButton').addEventListener('click', () => {
+        const dropZones = document.querySelectorAll('.drop-zone');
+        const teamData = [];
+
+        dropZones.forEach(zone => {
+            const zoneId = zone.id;
+            const players = zone.querySelectorAll('.card');
+            players.forEach(player => {
+                const playerId = player.dataset.playerId;
+                teamData.push({ playerId, position: zoneId });
+            });
+        });
+				fetch("/saveTeam?user_id={{ .User_id }}", {
+						method: 'POST',
+						headers: {
+								'Content-Type': 'application/json'
+						},
+						body: JSON.stringify(teamData)
+				})
+				.then(response => response.json())
+				.then(data => {
+						if(data.error) { alert(data.error); }
+						else if (data.success){ alert(data.success); }
+				})
+				.catch(error => {
+						console.error('There was a problem with the fetch operation:', error);
+				});
+		});
+	});
+	</script>
+</body>
+</html>

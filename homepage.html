@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Football Manager</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+		<style>
+      body {
+				font-family: Arial, sans-serif;
+				background-image: url('https://wallpapercave.com/wp/wp10054836.jpg');
+				background-size: cover;
+				background-position: center;
+				background-attachment: fixed;
+				margin: 0;
+				padding: 20px;
+				padding-top: 0px;
+			}
+			header {
+				text-align: center;
+				width: 100%;
+				margin: 20px;
+				top: 0;
+				left: 0;
+				z-index: 1000;
+				color: #fff;
+				text-shadow: 1px 1px 8px rgba(0,0,0,0.7);
+			}
+			.card {
+				padding: 4px;
+				margin-bottom: 20px;
+				background-color: #fff;
+				border: 1px solid #ddd;
+				border-radius: 4px;
+			}
+			img {
+				display: block;
+				max-width: 100%;
+				height: auto;
+			}
+		</style>
+</head>
+<body>
+	<header>
+			<h1>Football Manager</h1>
+	</header>
+	<div class="row">
+		<div class="col-md-3">
+			<div class="card">
+				<h4>Profile</h4>
+				<p>{{ index . 2 }}</p>
+				<p>{{ index . 3 }}</p>
+			</div>
+		</div>
+		<div class="col-md-3">
+			<div class="card">
+				<img src="collection.jpg" alt="football picture">
+				<h4>Collection</h4>
+				<p>Collection with your cards and team.</p>
+				<button onclick="collection()" type="button">Move on</button>
+			</div>
+		</div>
+		<div class="col-md-3">
+			<div class="card">
+				<img src="images/market.jpg" alt="football picture">
+				<h4>Market</h4>
+				<p>Market with cards of other users and with the possibility to share cards.</p>
+				<button onclick="market()" type="button">Move on</button>
+			</div>
+		</div>
+		<div class="col-md-3">
+			<div class="card">
+				<img src="/images/daily_card.jpg" alt="football picture">
+				<h4>Daily quiz</h4>
+				<p>Quiz consisting of 5 football questions and a chance to get a card.</p>
+				<button onclick="quiz()" type="button">Move on</button>
+			</div>
+		</div>
+	</div>
+	<script>
+		function collection() {
+			window.location.href = "/collection?token={{ index . 0 }}";
+		}
+		function market() {
+			window.location.href = "/market?token={{ index . 0 }}";
+		}
+		function quiz() {
+			window.location.href = "/dailyQuestions?token={{ index . 0 }}";
+		}
+
+	</script>
+</body>
+</html>

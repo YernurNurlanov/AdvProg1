@@ -71,6 +71,7 @@
   
     </style>
 </head>
+<body>
 	<header>
 			<h1>Account</h1>
 	</header>
@@ -80,45 +81,93 @@
 					<button class="tab-btn" onclick="showTab('log in')">Log in</button>
 		</div>
 		<div id="register" class="form-container">
-				<form action="/createUser" method="POST" class="registration-form">
+				<form onsubmit="registerUser(event)" class="registration-form">
 						<div class="form-group">
-								<label for="login">Login</label>
-								<input type="text" id="login" name="login" required>
+								<label for="login1">Email</label>
+								<input type="email" id="login1" name="login1" required>
 						</div>
 						<div class="form-group">
-								<label for="password">Password</label>
-								<input type="password" id="password" name="password" required>
+								<label for="password1">Password</label>
+								<input type="password" id="password1" name="password" required>
 						</div>
 						<button type="submit" class="submit-btn">Register</button>
 				</form>
 		</div>
 		<div id="log in" class="form-container">
-			<form action="/login" method="POST" class="registration-form">
+			<form onsubmit="loginUser(event)" class="registration-form">
 					<div class="form-group">
-							<label for="login">Login</label>
-							<input type="text" id="login" name="login" required>
+							<label for="login2">Email</label>
+							<input type="email" id="login2" name="login1" required>
 					</div>
 					<div class="form-group">
-							<label for="password">Password</label>
-							<input type="password" id="password" name="password" required>
+							<label for="password2">Password</label>
+							<input type="password" id="password2" name="password" required>
 					</div>
 					<button type="submit" class="submit-btn">Log in</button>
 			</form>
 		</div>
+		<p id="message"></p>
 	</div>
 <script>
+		function registerUser(event) {
+				event.preventDefault();
+				const email = document.getElementById("login1").value
+				const password = document.getElementById("password1").value
+				fetch(`/createUser?email=${email}&password=${password}`, {
+						method: 'POST'
+				}).then(response => {
+						if (response.ok) {
+								return response.json();
+						} else {
+								throw new Error('Network response was not ok.');
+						}
+				}).then(data => {
+						if(data.error) {
+							alert(data.error);
+						}
+						else if (data.success){
+							alert(data.success);
+							window.location.href = "/register";
+						}
+				}).catch(error => {
+						console.error('There was a problem with the fetch operation:', error);
+				});
+    }
+		function loginUser(event) {
+				event.preventDefault();
+				const email = document.getElementById("login2").value
+				const password = document.getElementById("password2").value
+				fetch(`/login?email=${email}&password=${password}`, {
+						method: 'POST'
+				}).then(response => {
+						if (response.ok) {
+								return response.json();
+						} else {
+								throw new Error('Network response was not ok.');
+						}
+				}).then(data => {
+						if(data.error) {
+							alert(data.error);
+						}
+						else if (data.success){
+							if (data.success == "Admin") {
+								window.location.href = `/admin?token=${data.token}`;
+							}
+							else {
+								window.location.href = `/homePage?token=${data.token}`;
+							}
+						}
+				}).catch(error => {
+						console.error('There was a problem with the fetch operation:', error);
+				});
+		}
 		function showTab(tabId) {
-			// Скрываем все вкладки
 			document.querySelectorAll('.form-container').forEach(function(tab) {
 					tab.style.display = 'none';
 			});
-
-			// Убираем активное состояние со всех кнопок
 			document.querySelectorAll('.form-container').forEach(function(btn) {
 					btn.classList.remove('active');
 			});
-
-			// Показываем выбранную вкладку и делаем кнопку активной
 			document.getElementById(tabId).style.display = 'block';
 			document.querySelector(`[onclick="showTab('${tabId}')"]`).classList.add('active');
 		}

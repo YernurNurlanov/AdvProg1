@@ -26,6 +26,16 @@
 			text-shadow: 1px 1px 8px rgba(0,0,0,0.7);
 		}
 
+		h2 {
+			text-align: center;
+			width: 100%;
+			top: 0;
+			left: 0;
+			z-index: 1000;
+			color: #fff;
+			text-shadow: 1px 1px 8px rgba(0,0,0,0.7);
+		}
+
 		.card-container {
 			display: flex;
 			flex-wrap: wrap;
@@ -63,6 +73,7 @@
 	<header>
 			<h1>Market</h1>
 	</header>
+	<button onclick="homePage()">Home page</button>
 	<div id="filter-sort">
 			<!-- Sorting Options -->
 			<form id="sortForm">
@@ -95,8 +106,35 @@
 			<span id="currentPage">1</span>
 			<button id="nextPage">Next</button>
 	</div>
-
+	<h2>My cards in deals</h2>
+	<div id="myCards" class="card-container">
+		{{ range index . 1 }}
+    	<div class="card">
+        <p>Name: {{ .Card_id.Name }}</p>
+        <p>Nationality: {{ .Card_id.Nationality }}</p>
+        <p>Club: {{ .Card_id.Club }}</p>
+        <p>Position: {{ .Card_id.Position }}</p>
+        <button onclick="sendCardData('{{ .Card_id.Card_id }}', '{{ .User_id }}')">Move into collection</button>
+    	</div>
+		{{ end }}
+	</div>
 	<script>
+		function homePage() {
+			window.location.href = "/homePage?token={{ index . 0 }}";
+		}
+		// move card to collection
+		function sendCardData(cardId,userId) {
+			fetch(`/CardToCollection?card_id=${cardId}&user_id=${userId}`, {
+				method: 'POST'
+			})
+			.then(response => {
+				if (response.ok) {
+					alert('Player transfered to collection successfully');
+				} else {
+					alert('Failed to transfer player.');
+				}
+			})
+		}
 		// display cards
 		let currentPage = 1
 		var page = document.getElementById("currentPage")
@@ -105,37 +143,42 @@
 		document.getElementById('prevPage').disabled = currentPage === 1;
 		document.addEventListener('DOMContentLoaded', fetchData);
 		function fetchData() {
+			//////////////////////////////////////////// MUST BE CHANGED
 				fetch(`/marketCards?page=${currentPage}&filter=${encodeURIComponent(filter)}&sort=${encodeURIComponent(`card_id.${sortBy}`)}`)
 						.then(response => response.json())
-						.then(data => displayData(data))
-						.catch(error => console.error('Error fetching data:', error));
+						.then(data => {
+								if(data.error) { alert(data.error); }
+								else { displayData(data); }
+						})
+						.catch(error => {
+								console.error('There was a problem with the fetch operation:', error);
+						});
 		}
 		function displayData(data) {
 				const dataContainer = document.getElementById('marketCards');
 				
 				data.forEach(item => {
-						item["card_id"].forEach(it => {
 
 							const user_id = document.createElement('p');
-						user_id.textContent = `User_id: ${item["user_id"]}`;
+							user_id.textContent = `User_id: ${item["user_id"]}`;
 
 							const div = document.createElement('div');
 							div.classList.add('card');
 
 							const card_id = document.createElement('p');
-							card_id.textContent = `Card_id: ${it["card_id"]}`;
+							card_id.textContent = `Card_id: ${item["card_id"]["card_id"]}`;
 
 							const name = document.createElement('p');
-							name.textContent = `Name: ${it["name"]}`;
+							name.textContent = `Name: ${item["card_id"]["name"]}`;
 
 							const nationality = document.createElement('p');
-							nationality.textContent = `Nationality: ${it["nationality"]}`;
+							nationality.textContent = `Nationality: ${item["card_id"]["nationality"]}`;
 
 							const club = document.createElement('p');
-							club.textContent = `Club: ${it["club"]}`;
+							club.textContent = `Club: ${item["card_id"]["club"]}`;
 
 							const position = document.createElement('p');
-							position.textContent = `Position: ${it["position"]}`;
+							position.textContent = `Position: ${item["card_id"]["position"]}`;
 							
 							div.appendChild(user_id);
 							div.appendChild(card_id);
@@ -144,7 +187,6 @@
 							div.appendChild(nationality);
 							div.appendChild(position);
 							dataContainer.appendChild(div);
-						});
 				});
 		}
 		// filtering
@@ -154,19 +196,23 @@
 			if (filter) {
 				currentPage = 1
 				page.innerHTML = currentPage;
+				document.getElementById('nextPage').disabled = false;
 				document.getElementById('prevPage').disabled = currentPage === 1;
 				fetch(`/marketCards?page=${currentPage}&filter=${encodeURIComponent(filter)}&sort=${encodeURIComponent(`card_id.${sortBy}`)}`, {
             method: 'GET',
         })
         .then(response => response.json())
         .then(data => {
-						var myDiv = document.getElementById('marketCards');
-        		myDiv.innerHTML = '';
-            displayData(data)
-        })
-        .catch(error => {
-            console.error('Ошибка отправки данных:', error);
-        });
+						if(data.error) { alert(data.error); }
+						else { 
+							var myDiv = document.getElementById('marketCards');
+							myDiv.innerHTML = '';
+							displayData(data); 
+						}
+				})
+				.catch(error => {
+						console.error('There was a problem with the fetch operation:', error);
+				});
       } else {
             alert('Please select a position before submitting.');
         }
@@ -179,19 +225,23 @@
 			if (sortBy) {
 				currentPage = 1
 				page.innerHTML = currentPage;
+				document.getElementById('nextPage').disabled = false;
 				document.getElementById('prevPage').disabled = currentPage === 1;
 				fetch(`/marketCards?page=${currentPage}&filter=${encodeURIComponent(filter)}&sort=${encodeURIComponent(`card_id.${sortBy}`)}`, {
             method: 'GET',
         })
         .then(response => response.json())
         .then(data => {
-						var myDiv = document.getElementById('marketCards');
-        		myDiv.innerHTML = '';
-            displayData(data)
-        })
-        .catch(error => {
-            console.error('Ошибка отправки данных:', error);
-        });
+						if(data.error) { alert(data.error); }
+						else { 
+							var myDiv = document.getElementById('marketCards');
+							myDiv.innerHTML = '';
+							displayData(data); 
+						}
+				})
+				.catch(error => {
+						console.error('There was a problem with the fetch operation:', error);
+				});
       } else {
             alert('Please select a position before submitting.');
         }
@@ -204,11 +254,17 @@
         method: 'GET',
       })
 				.then(response => response.json())
-				.then(data =>{
-					var myDiv = document.getElementById('marketCards');
-        	myDiv.innerHTML = '';
-				 	displayData(data)})
-				.catch(error => console.error('Error fetching data:', error));
+				.then(data => {
+						if(data.error) { alert(data.error); }
+						else { 
+							var myDiv = document.getElementById('marketCards');
+							myDiv.innerHTML = '';
+							displayData(data); 
+						}
+				})
+				.catch(error => {
+						console.error('There was a problem with the fetch operation:', error);
+				});
 			document.getElementById('prevPage').disabled = currentPage === 1;
 			if (currentPage != 1) {
 				document.getElementById('prevPage').disabled = false;
@@ -225,11 +281,17 @@
         method: 'GET',
       })
 				.then(response => response.json())
-				.then(data =>{
-					var myDiv = document.getElementById('marketCards');
-        	myDiv.innerHTML = '';
-				 	displayData(data)})
-				.catch(error => console.error('Error fetching data:', error));
+				.then(data => {
+						if(data.error) { alert(data.error); }
+						else { 
+							var myDiv = document.getElementById('marketCards');
+							myDiv.innerHTML = '';
+							displayData(data); 
+						}
+				})
+				.catch(error => {
+						console.error('There was a problem with the fetch operation:', error);
+				});
 			document.getElementById('prevPage').disabled = currentPage === 1;
 			if (currentPage != 1) {
 				document.getElementById('prevPage').disabled = false;
