@@ -1004,10 +1004,8 @@ func handleRequests() {
 	rtr.HandleFunc("/giveCard", giveCard)
 	// Home page
 	rtr.Handle("/homePage", authenticate(http.HandlerFunc(homePage)))
-	rtr.Handle("/", http.StripPrefix("/", http.FileServer(http.Dir("images"))))
 	//
 	rtr.HandleFunc("/", handler)
-	http.Handle("/", rtr)
 	fmt.Println("Server listening on port 8080")
 	http.ListenAndServe(":8080", nil)
 }
