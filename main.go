@@ -377,7 +377,7 @@ func market(w http.ResponseWriter, r *http.Request) {
 			"status": "error",
 			"error":  err,
 		}).Error("Failed to convert claims to jwt.Claims.")
-		r.URL.Path = "/register"
+		r.URL.Path = "/"
 		return
 	}
 	userID, ok := claims["user_id"].(string)
@@ -386,7 +386,7 @@ func market(w http.ResponseWriter, r *http.Request) {
 			"action": "collection",
 			"status": "error",
 		}).Error("User unauthorized.")
-		r.URL.Path = "/register"
+		r.URL.Path = "/"
 		return
 	}
 	tmpl, err := template.ParseFiles("market.html")
@@ -579,7 +579,7 @@ func collection(w http.ResponseWriter, r *http.Request) {
 			"status": "error",
 			"error":  err,
 		}).Error("Failed to convert claims to jwt.Claims.")
-		r.URL.Path = "/register"
+		r.URL.Path = "/"
 		return
 	}
 	userID, ok := claims["user_id"].(string)
@@ -588,7 +588,7 @@ func collection(w http.ResponseWriter, r *http.Request) {
 			"action": "collection",
 			"status": "error",
 		}).Error("User unauthorized.")
-		r.URL.Path = "/register"
+		r.URL.Path = "/"
 		return
 	}
 	tmpl, err := template.ParseFiles("collection.html")
@@ -718,7 +718,7 @@ func dailyQuestions(w http.ResponseWriter, r *http.Request) {
 			"status": "error",
 			"error":  err,
 		}).Error("Failed to convert claims to jwt.Claims.")
-		r.URL.Path = "/register"
+		r.URL.Path = "/"
 		return
 	}
 	userID, ok := claims["user_id"].(string)
@@ -727,7 +727,7 @@ func dailyQuestions(w http.ResponseWriter, r *http.Request) {
 			"action": "dailyQuestions",
 			"status": "error",
 		}).Error("User unauthorized.")
-		r.URL.Path = "/register"
+		r.URL.Path = "/"
 		return
 	}
 	var questions User_Questions
@@ -874,7 +874,7 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 			"status": "error",
 			"error":  err,
 		}).Error("Failed to convert claims to jwt.Claims.")
-		r.URL.Path = "/register"
+		r.URL.Path = "/"
 		return
 	}
 	userID, ok := claims["user_id"].(string)
@@ -883,7 +883,7 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 			"action": "homePage",
 			"status": "error",
 		}).Error("User unauthorized.")
-		r.URL.Path = "/register"
+		r.URL.Path = "/"
 		return
 	}
 	email, ok := claims["email"].(string)
@@ -892,7 +892,7 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 			"action": "homePage",
 			"status": "error",
 		}).Error("User unauthorized.")
-		r.URL.Path = "/register"
+		r.URL.Path = "/"
 		return
 	}
 	password, ok := claims["password"].(string)
@@ -901,7 +901,7 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 			"action": "homePage",
 			"status": "error",
 		}).Error("User unauthorized.")
-		r.URL.Path = "/register"
+		r.URL.Path = "/"
 		return
 	}
 	var answer []string
@@ -957,12 +957,12 @@ func authenticate(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		tokenString := r.URL.Query().Get("token")
 		if tokenString == "" {
-			http.Redirect(w, r, "/register", http.StatusSeeOther)
+			http.Redirect(w, r, "/", http.StatusSeeOther)
 			return
 		}
 		token, err := verifyToken(tokenString)
 		if err != nil || !token.Valid {
-			http.Redirect(w, r, "/register", http.StatusSeeOther)
+			http.Redirect(w, r, "/", http.StatusSeeOther)
 			return
 		}
 		next.ServeHTTP(w, r)
@@ -1006,6 +1006,7 @@ func handleRequests() {
 	rtr.Handle("/homePage", authenticate(http.HandlerFunc(homePage)))
 	//
 	rtr.HandleFunc("/", handler)
+	http.Handle("/", rtr)
 	fmt.Println("Server listening on port 8080")
 	http.ListenAndServe(":8080", nil)
 }

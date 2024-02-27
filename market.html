@@ -127,13 +127,14 @@
 			fetch(`/CardToCollection?card_id=${cardId}&user_id=${userId}`, {
 				method: 'POST'
 			})
-			.then(response => {
-				if (response.ok) {
-					alert('Player transfered to collection successfully');
-				} else {
-					alert('Failed to transfer player.');
-				}
+			.then(response => response.json())
+			.then(data => {
+					if(data.error) { alert(data.error); }
+					else { placePlayersInZones(data); }
 			})
+			.catch(error => {
+					console.error('There was a problem with the fetch operation:', error);
+			});
 		}
 		// display cards
 		let currentPage = 1
