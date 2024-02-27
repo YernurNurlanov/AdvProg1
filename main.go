@@ -169,30 +169,30 @@ func deleteUser(w http.ResponseWriter, r *http.Request) {
 	userID := r.URL.Query().Get("id")
 	_, err := db.Collection("users").DeleteOne(r.Context(), bson.M{"user_id": userID})
 	if err != nil {
-		sendErrorMessage(w, r, "deleteUser", err, "Error deleting user. Try again.")
+		sendErrorMessage(w, "deleteUser", err, "Error deleting user. Try again.")
 		return
 	}
 	_, err = db.Collection("collections").DeleteOne(r.Context(), bson.M{"user_id": userID})
 	if err != nil {
-		sendErrorMessage(w, r, "deleteUser", err, "Error deleting users collection. Try again.")
+		sendErrorMessage(w, "deleteUser", err, "Error deleting users collection. Try again.")
 		return
 	}
 	_, err = db.Collection("user_questions").DeleteOne(r.Context(), bson.M{"user_id": userID})
 	if err != nil {
-		sendErrorMessage(w, r, "deleteUser", err, "Error deleting users questions collection. Try again.")
+		sendErrorMessage(w, "deleteUser", err, "Error deleting users questions collection. Try again.")
 		return
 	}
 	_, err = db.Collection("teams").DeleteOne(r.Context(), bson.M{"user_id": userID})
 	if err != nil {
-		sendErrorMessage(w, r, "deleteUser", err, "Error deleting users team. Try again.")
+		sendErrorMessage(w, "deleteUser", err, "Error deleting users team. Try again.")
 		return
 	}
 	_, err = db.Collection("cards_in_deal").DeleteMany(r.Context(), bson.M{"user_id": userID})
 	if err != nil {
-		sendErrorMessage(w, r, "deleteUser", err, "Error deleting users cards in deal. Try again.")
+		sendErrorMessage(w, "deleteUser", err, "Error deleting users cards in deal. Try again.")
 		return
 	}
-	sendSuccessMessage(w, r, "deleteUser", "User was deleted.", "")
+	sendSuccessMessage(w, "deleteUser", "User was deleted.", "")
 }
 func getAllUsers(w http.ResponseWriter, r *http.Request) {
 	cursor, err := db.Collection("users").Find(r.Context(), bson.D{})
@@ -239,7 +239,7 @@ func createUser(w http.ResponseWriter, r *http.Request) {
 	password := r.URL.Query().Get("password")
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
-		sendErrorMessage(w, r, "createUser", err, "Error hashing password. Try to register again.")
+		sendErrorMessage(w, "createUser", err, "Error hashing password. Try to register again.")
 		return
 	}
 	newUser := User{
@@ -251,12 +251,12 @@ func createUser(w http.ResponseWriter, r *http.Request) {
 	err = db.Collection("users").FindOne(r.Context(), bson.M{"email": email}).Decode(&existingUser)
 	if err == nil {
 		errorMessage := "User with email: '" + email + "' already exists. Try again."
-		sendErrorMessage(w, r, "createUser", errors.New(errorMessage), errorMessage)
+		sendErrorMessage(w, "createUser", errors.New(errorMessage), errorMessage)
 		return
 	}
 	_, err = db.Collection("users").InsertOne(r.Context(), newUser)
 	if err != nil {
-		sendErrorMessage(w, r, "createUser", err, "Error creating user. Try again.")
+		sendErrorMessage(w, "createUser", err, "Error creating user. Try again.")
 		return
 	}
 	newUserCollection := Collections{
@@ -265,7 +265,7 @@ func createUser(w http.ResponseWriter, r *http.Request) {
 	}
 	_, err = db.Collection("collections").InsertOne(r.Context(), newUserCollection)
 	if err != nil {
-		sendErrorMessage(w, r, "createUser", err, "Error creating users collection. Try again.")
+		sendErrorMessage(w, "createUser", err, "Error creating users collection. Try again.")
 		return
 	}
 	questionSize, err := db.Collection("questions").CountDocuments(r.Context(), bson.M{})
@@ -315,7 +315,7 @@ func createUser(w http.ResponseWriter, r *http.Request) {
 	}
 	_, err = db.Collection("user_questions").InsertOne(r.Context(), newUserQuestions)
 	if err != nil {
-		sendErrorMessage(w, r, "createUser", err, "Error creating users questions. Try again.")
+		sendErrorMessage(w, "createUser", err, "Error creating users questions. Try again.")
 		return
 	}
 	newUserTeam := Teams{
@@ -324,10 +324,10 @@ func createUser(w http.ResponseWriter, r *http.Request) {
 	}
 	_, err = db.Collection("teams").InsertOne(r.Context(), newUserTeam)
 	if err != nil {
-		sendErrorMessage(w, r, "createUser", err, "Error creating users team. Try again.")
+		sendErrorMessage(w, "createUser", err, "Error creating users team. Try again.")
 		return
 	}
-	sendSuccessMessage(w, r, "createUser", "User created successfully. Log in to the account", "")
+	sendSuccessMessage(w, "createUser", "User created successfully. Log in to the account", "")
 }
 func login(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
@@ -339,24 +339,24 @@ func login(w http.ResponseWriter, r *http.Request) {
 	existingUser := User{}
 	err := db.Collection("users").FindOne(r.Context(), bson.M{"email": email}).Decode(&existingUser)
 	if err != nil {
-		sendErrorMessage(w, r, "login", err, "Incorrect login entered. Try again.")
+		sendErrorMessage(w, "login", err, "Incorrect login entered. Try again.")
 		return
 	}
 	err = bcrypt.CompareHashAndPassword([]byte(existingUser.Password), []byte(password))
 	if err != nil {
-		sendErrorMessage(w, r, "login", err, "Incorrect password entered. Try again.")
+		sendErrorMessage(w, "login", err, "Incorrect password entered. Try again.")
 		return
 	}
 	token, err := generateToken(&existingUser)
 	if err != nil {
-		sendErrorMessage(w, r, "login", err, "Failed to generate token. Try to log in again.")
+		sendErrorMessage(w, "login", err, "Failed to generate token. Try to log in again.")
 		return
 	}
 	if email == "admin@gmail.com" {
-		sendSuccessMessage(w, r, "login", "Admin", token)
+		sendSuccessMessage(w, "login", "Admin", token)
 		return
 	}
-	sendSuccessMessage(w, r, "login", "User login successfully", token)
+	sendSuccessMessage(w, "login", "User login successfully", token)
 }
 func registerPage(w http.ResponseWriter, r *http.Request) {
 	tmpl.ExecuteTemplate(w, "registration.html", nil)
@@ -449,19 +449,19 @@ func printData(w http.ResponseWriter, r *http.Request, cursor *mongo.Cursor) {
 		var bsonDoc bson.M
 		err := cursor.Decode(&bsonDoc)
 		if err != nil {
-			sendErrorMessage(w, r, "printData", err, "Error decoding database results. Try to reload page.")
+			sendErrorMessage(w, "printData", err, "Error decoding database results. Try to reload page.")
 			return
 		}
 		deal, err := bsonToDeals(bsonDoc)
 		if err != nil {
-			sendErrorMessage(w, r, "printData", err, "Error converting data to Deals. Try to reload page.")
+			sendErrorMessage(w, "printData", err, "Error converting data to Deals. Try to reload page.")
 			return
 		}
 		deals = append(deals, deal)
 	}
 	w.Header().Set("Content-Type", "application/json")
 	if err := json.NewEncoder(w).Encode(deals); err != nil {
-		sendErrorMessage(w, r, "printData", err, "Error encoding JSON. Try to reload page.")
+		sendErrorMessage(w, "printData", err, "Error encoding JSON. Try to reload page.")
 		return
 	}
 }
@@ -469,7 +469,7 @@ func marketCards(w http.ResponseWriter, r *http.Request) {
 	var perPage = 20
 	page, err := strconv.Atoi(r.URL.Query().Get("page"))
 	if err != nil {
-		sendErrorMessage(w, r, "marketCards", err, "Invalid page parameter. Try to reload page.")
+		sendErrorMessage(w, "marketCards", err, "Invalid page parameter. Try to reload page.")
 		return
 	}
 	skip := (page - 1) * perPage
@@ -481,7 +481,7 @@ func marketCards(w http.ResponseWriter, r *http.Request) {
 	if positionFilter == "" && sortBy == "card_id." {
 		cursor, err := db.Collection("cards_in_deal").Find(r.Context(), bson.D{}, findOptions)
 		if err != nil {
-			sendErrorMessage(w, r, "marketCards", err, "Error querying the database. Try to reload page.")
+			sendErrorMessage(w, "marketCards", err, "Error querying the database. Try to reload page.")
 			return
 		}
 		defer cursor.Close(r.Context())
@@ -496,7 +496,7 @@ func marketCards(w http.ResponseWriter, r *http.Request) {
 		findOptions.SetSort(sortOptions)
 		cursor, err := db.Collection("cards_in_deal").Find(r.Context(), bson.M{}, findOptions)
 		if err != nil {
-			sendErrorMessage(w, r, "marketCards", err, "Error querying the database. Try to reload page.")
+			sendErrorMessage(w, "marketCards", err, "Error querying the database. Try to reload page.")
 			return
 		}
 		defer cursor.Close(r.Context())
@@ -511,7 +511,7 @@ func marketCards(w http.ResponseWriter, r *http.Request) {
 		filter := bson.M{"card_id.position": positionFilter}
 		cursor, err := db.Collection("cards_in_deal").Find(r.Context(), filter, findOptions)
 		if err != nil {
-			sendErrorMessage(w, r, "marketCards", err, "Error querying the database. Try to reload page.")
+			sendErrorMessage(w, "marketCards", err, "Error querying the database. Try to reload page.")
 			return
 		}
 		defer cursor.Close(r.Context())
@@ -528,7 +528,7 @@ func marketCards(w http.ResponseWriter, r *http.Request) {
 		filter := bson.M{"card_id.position": positionFilter}
 		cursor, err := db.Collection("cards_in_deal").Find(r.Context(), filter, findOptions)
 		if err != nil {
-			sendErrorMessage(w, r, "marketCards", err, "Error querying the database. Try to reload page.")
+			sendErrorMessage(w, "marketCards", err, "Error querying the database. Try to reload page.")
 			return
 		}
 		defer cursor.Close(r.Context())
@@ -547,25 +547,30 @@ func marketCards(w http.ResponseWriter, r *http.Request) {
 func cardToCollection(w http.ResponseWriter, r *http.Request) {
 	userID := r.URL.Query().Get("user_id")
 	cardID := r.URL.Query().Get("card_id")
-	_, err := db.Collection("cards_in_deal").DeleteOne(r.Context(), bson.M{"user_id": userID, "card_id": cardID})
+	card_id, err := strconv.Atoi(cardID) 
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		sendErrorMessage(w, "cardToCollection", err, "Error converting card_id to int. Try again.")
+		return
+	}
+	_, err = db.Collection("cards_in_deal").DeleteOne(r.Context(), bson.M{"user_id": userID, "card_id.card_id": card_id})
+	if err != nil {
+		sendErrorMessage(w, "cardToCollection", err, "Error deleting card from deal. Try again.")
 		return
 	}
 	var card Card
-	err = db.Collection("cards").FindOne(r.Context(), bson.M{"card_id": cardID}, options.FindOne().SetProjection(bson.M{"_id": 0})).Decode(&card)
+	err = db.Collection("cards").FindOne(r.Context(), bson.M{"card_id": card_id}, options.FindOne().SetProjection(bson.M{"_id": 0})).Decode(&card)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		sendErrorMessage(w, "cardToCollection", err, "Error get card from cards collection. Try again.")
 		return
 	}
 	filter := bson.M{"user_id": userID}
-	update := bson.M{"$push": bson.M{"cards": card}}
+	update := bson.M{"$push": bson.M{"card_id": card}}
 	_, err = db.Collection("collections").UpdateOne(r.Context(), filter, update)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		sendErrorMessage(w, "cardToCollection", err, "Error put card to your collection. Try again.")
 		return
 	}
-	w.WriteHeader(http.StatusOK)
+	sendSuccessMessage(w, "cardToCollection", "Player was transfered to collection successfully!", "")
 }
 
 // /////////////////////////////////////////////////////////////////// Collection page
@@ -625,7 +630,7 @@ func saveTeam(w http.ResponseWriter, r *http.Request) {
 	var teamData []Player
 	err := json.NewDecoder(r.Body).Decode(&teamData)
 	if err != nil {
-		sendErrorMessage(w, r, "saveTeam", err, "Failed to parse request body. Try to reload page.")
+		sendErrorMessage(w, "saveTeam", err, "Failed to parse request body. Try to reload page.")
 		return
 	}
 	user_id := r.URL.Query().Get("user_id")
@@ -634,10 +639,10 @@ func saveTeam(w http.ResponseWriter, r *http.Request) {
 	// Обновляем документ, соответствующий фильтру
 	_, err = db.Collection("teams").UpdateOne(r.Context(), filter, update)
 	if err != nil {
-		sendErrorMessage(w, r, "saveTeam", err, "Failed to save team data to MongoDB. Try again.")
+		sendErrorMessage(w, "saveTeam", err, "Failed to save team data to MongoDB. Try again.")
 		return
 	}
-	sendSuccessMessage(w, r, "saveTeam", "Team saved successfully.", "")
+	sendSuccessMessage(w, "saveTeam", "Team saved successfully.", "")
 }
 func getTeam(w http.ResponseWriter, r *http.Request) {
 	type TeamPlayers struct {
@@ -648,7 +653,7 @@ func getTeam(w http.ResponseWriter, r *http.Request) {
 	filter := bson.M{"user_id": user_id}
 	err := db.Collection("teams").FindOne(r.Context(), filter).Decode(&teamPlayers)
 	if err != nil {
-		sendErrorMessage(w, r, "getTeam", err, "Failed to fetch team data. Try to reload page.")
+		sendErrorMessage(w, "getTeam", err, "Failed to fetch team data. Try to reload page.")
 		return
 	}
 	var players []Player
@@ -755,34 +760,34 @@ func giveCard(w http.ResponseWriter, r *http.Request) {
 	if answers == "5" {
 		cardSize, err := db.Collection("cards").CountDocuments(r.Context(), bson.M{})
 		if err != nil {
-			sendErrorMessage(w, r, "giveCard", err, "Error getting collection size. Try submitting the answers again.")
+			sendErrorMessage(w, "giveCard", err, "Error getting collection size. Try submitting the answers again.")
 			return
 		}
 		randomNumber := rand.Intn(int(cardSize))
 		var card Card
 		err = db.Collection("cards").FindOne(r.Context(), bson.M{"card_id": randomNumber}, options.FindOne().SetProjection(bson.M{"_id": 0})).Decode(&card)
 		if err != nil {
-			sendErrorMessage(w, r, "giveCard", err, "Failed to get the card. Try submitting the answers again.")
+			sendErrorMessage(w, "giveCard", err, "Failed to get the card. Try submitting the answers again.")
 			return
 		}
 		_, err = db.Collection("collections").UpdateOne(r.Context(), bson.M{"user_id": user_id}, bson.M{"$push": bson.M{"card_id": card}})
 		if err != nil {
-			sendErrorMessage(w, r, "giveCard", err, "Failed to give the card. Try submitting the answers again.")
+			sendErrorMessage(w, "giveCard", err, "Failed to give the card. Try submitting the answers again.")
 			return
 		}
 		_, err = db.Collection("user_questions").UpdateOne(r.Context(), bson.M{"user_id": user_id}, bson.M{"$set": bson.M{"submit": true}})
 		if err != nil {
-			sendErrorMessage(w, r, "giveCard", err, "Failed to submit the answers. Try submitting the answers again.")
+			sendErrorMessage(w, "giveCard", err, "Failed to submit the answers. Try submitting the answers again.")
 			return
 		}
-		sendSuccessMessage(w, r, "giveCard", "The card "+card.Name+" has been added to your collection successfully.", "")
+		sendSuccessMessage(w, "giveCard", "The card "+card.Name+" has been added to your collection successfully.", "")
 	} else {
 		_, err := db.Collection("user_questions").UpdateOne(r.Context(), bson.M{"user_id": user_id}, bson.M{"$set": bson.M{"submit": true}})
 		if err != nil {
-			sendErrorMessage(w, r, "giveCard", err, "Failed to submit the answers. Try submitting the answers again.")
+			sendErrorMessage(w, "giveCard", err, "Failed to submit the answers. Try submitting the answers again.")
 			return
 		}
-		sendSuccessMessage(w, r, "giveCard", "The answers submitted. Good luck getting your new card tomorrow!", "")
+		sendSuccessMessage(w, "giveCard", "The answers submitted. Good luck getting your new card tomorrow!", "")
 	}
 }
 func updateCollectionPeriodically(ctx context.Context) {
@@ -909,7 +914,7 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 	tmpl.ExecuteTemplate(w, "homepage.html", answer)
 }
 // Error Handling with log messages
-func sendErrorMessage(w http.ResponseWriter, r *http.Request, action string, err error, message string) {
+func sendErrorMessage(w http.ResponseWriter, action string, err error, message string) {
 	logger.WithFields(logrus.Fields{
 		"action": action,
 		"status": "error",
@@ -918,7 +923,7 @@ func sendErrorMessage(w http.ResponseWriter, r *http.Request, action string, err
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]string{"error": message})
 }
-func sendSuccessMessage(w http.ResponseWriter, r *http.Request, action string, message string, token string) {
+func sendSuccessMessage(w http.ResponseWriter, action string, message string, token string) {
 	logger.WithFields(logrus.Fields{
 		"action": action,
 		"status": "success",
@@ -992,7 +997,7 @@ func handleRequests() {
 	// Market page
 	rtr.Handle("/market", authenticate(http.HandlerFunc(market))).Methods("GET")
 	rtr.HandleFunc("/marketCards", marketCards).Methods("GET")
-	rtr.HandleFunc("/cardToCollection", cardToCollection)
+	rtr.HandleFunc("/cardToCollection", cardToCollection).Methods("POST")
 	// Admin page
 	rtr.Handle("/admin", authenticate(http.HandlerFunc(admin)))
 	// Collection page
@@ -1005,6 +1010,8 @@ func handleRequests() {
 	// Home page
 	rtr.Handle("/homePage", authenticate(http.HandlerFunc(homePage)))
 	//
+	http.Handle("/script/", http.StripPrefix("/script/", http.FileServer(http.Dir("./script"))))
+	http.Handle("/images/", http.StripPrefix("/images/", http.FileServer(http.Dir("./images"))))
 	rtr.HandleFunc("/", handler)
 	http.Handle("/", rtr)
 	fmt.Println("Server listening on port 8080")
