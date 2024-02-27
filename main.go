@@ -988,7 +988,7 @@ func handleRequests() {
 	// Registration page
 	rtr.HandleFunc("/createUser", createUser).Methods("POST")
 	rtr.HandleFunc("/login", login).Methods("POST")
-	rtr.HandleFunc("/register", registerPage).Methods("GET")
+	rtr.HandleFunc("/", registerPage).Methods("GET")
 	// Market page
 	rtr.Handle("/market", authenticate(http.HandlerFunc(market))).Methods("GET")
 	rtr.HandleFunc("/marketCards", marketCards).Methods("GET")

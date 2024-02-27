@@ -331,3 +331,4 @@ time="2024-02-26T22:40:15+06:00" level=info msg="User on the market page" action
 time="2024-02-26T22:40:15+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
 time="2024-02-26T22:40:17+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=151
 time="2024-02-26T22:40:20+06:00" level=info msg="User on the dailyQuestions page" action=dailyQuestions status=success
+time="2024-02-27T12:19:30+06:00" level=info msg="User on the page." action=registerPage status=success
