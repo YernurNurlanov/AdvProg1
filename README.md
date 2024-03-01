@@ -19,5 +19,10 @@ go get -u github.com/sirupsen/logrus
 3. Create a MongoDB database named ```football_tools```, collections named ```cards_in_deals``` and ```users```, and import the files from the ```data``` folder.
 4. Run your project: ```go run main.go```
 5. Open a web browser and go to ```http://localhost:8080/register``` to access the registration page.
-## Screenshot
+## Screenshots
 ![Registration page](images/screenshot.jpg)
+![Admin page](images/adminpage.jpg)
+![Home page](images/homepage.jpg)
+![Collection page](images/collectionpage.jpg)
+![Market page](images/marketpage.jpg)
+![Daily Card page](images/dailycardpage.jpg)
