@@ -332,3 +332,577 @@ time="2024-02-26T22:40:15+06:00" level=info msg="Data was printed" action=market
 time="2024-02-26T22:40:17+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=151
 time="2024-02-26T22:40:20+06:00" level=info msg="User on the dailyQuestions page" action=dailyQuestions status=success
 time="2024-02-27T12:19:30+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-27T12:21:13+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-27T12:25:46+06:00" level=info msg="User login successfully" action=login status=success
+time="2024-02-27T12:25:46+06:00" level=info msg="User login successfully" action=login status=success
+time="2024-02-27T12:25:47+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=151
+time="2024-02-27T12:25:50+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T12:25:51+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T12:25:55+06:00" level=info msg="User on the dailyQuestions page" action=dailyQuestions status=success
+time="2024-02-27T12:28:14+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T12:28:14+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T12:28:16+06:00" level=info msg="User on the dailyQuestions page" action=dailyQuestions status=success
+time="2024-02-27T12:28:23+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T12:28:24+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T12:48:59+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-27T12:49:00+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-27T12:51:54+06:00" level=error msg="User has not players in deals." action=market error="canceled while checking out a connection from connection pool: context canceled; total connections: 1, maxPoolSize: 100, idle connections: 0, wait duration: 320.4703ms" status=error
+time="2024-02-27T12:51:54+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T12:51:55+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T12:52:06+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-27T12:52:06+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-27T12:52:38+06:00" level=info msg="User login successfully" action=login status=success
+time="2024-02-27T12:52:43+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T12:52:43+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T12:52:46+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=1
+time="2024-02-27T12:52:50+06:00" level=info msg="User on the dailyQuestions page" action=dailyQuestions status=success
+time="2024-02-27T12:57:41+06:00" level=info msg="User on the dailyQuestions page" action=dailyQuestions status=success
+time="2024-02-27T12:58:31+06:00" level=info msg="User on the dailyQuestions page" action=dailyQuestions status=success
+time="2024-02-27T14:09:27+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T14:09:27+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T14:09:44+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T14:09:44+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T14:09:48+06:00" level=info msg="Data was sorted by card_id.card_id" action=marketCards page=1 sortBy=card_id.card_id status=success
+time="2024-02-27T14:10:03+06:00" level=info msg="Data was sorted by card_id.card_id and filtered by Manager" action=marketCards filter=Manager page=1 sortBy=card_id.card_id status=success
+time="2024-02-27T14:10:24+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T14:10:25+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T14:10:34+06:00" level=info msg="User on the dailyQuestions page" action=dailyQuestions status=success
+time="2024-02-27T14:13:29+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-27T14:14:38+06:00" level=info msg="User login successfully" action=login status=success
+time="2024-02-27T14:14:40+06:00" level=info msg="User on the dailyQuestions page" action=dailyQuestions status=success
+time="2024-02-27T14:15:14+06:00" level=info msg="User on the dailyQuestions page" action=dailyQuestions status=success
+time="2024-02-27T14:15:19+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T14:15:20+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T14:15:30+06:00" level=info msg="User on the dailyQuestions page" action=dailyQuestions status=success
+time="2024-02-27T14:16:15+06:00" level=error msg="User has no questions." action=collection error="mongo: no documents in result" status=error
+time="2024-02-27T14:16:15+06:00" level=info msg="User on the dailyQuestions page" action=dailyQuestions status=success
+time="2024-02-27T14:16:19+06:00" level=error msg="User has no questions." action=collection error="mongo: no documents in result" status=error
+time="2024-02-27T14:16:19+06:00" level=info msg="User on the dailyQuestions page" action=dailyQuestions status=success
+time="2024-02-27T14:16:26+06:00" level=error msg="User has no questions." action=collection error="mongo: no documents in result" status=error
+time="2024-02-27T14:16:26+06:00" level=info msg="User on the dailyQuestions page" action=dailyQuestions status=success
+time="2024-02-27T14:16:30+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T14:16:30+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T14:16:56+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T14:16:56+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T14:17:00+06:00" level=info msg="User on the dailyQuestions page" action=dailyQuestions status=success
+time="2024-02-27T14:18:43+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-27T14:24:04+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-27T14:24:31+06:00" level=error msg="User with email: 'admin@gmail.com' already exists. Try again." action=createUser error="User with email: 'admin@gmail.com' already exists. Try again." status=error
+time="2024-02-27T14:24:32+06:00" level=error msg="User with email: 'admin@gmail.com' already exists. Try again." action=createUser error="User with email: 'admin@gmail.com' already exists. Try again." status=error
+time="2024-02-27T14:24:48+06:00" level=error msg="Incorrect password entered. Try again." action=login error="crypto/bcrypt: hashedPassword is not the hash of the given password" status=error
+time="2024-02-27T14:24:55+06:00" level=info msg=Admin action=login status=success
+time="2024-02-27T14:24:55+06:00" level=info msg="User on the admin page" action=admin status=success
+time="2024-02-27T14:33:33+06:00" level=info msg="User login successfully" action=login status=success
+time="2024-02-27T14:33:36+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T14:33:36+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T14:44:40+06:00" level=info msg="Data was sorted by card_id.name" action=marketCards page=1 sortBy=card_id.name status=success
+time="2024-02-27T14:44:44+06:00" level=info msg="Data was sorted by card_id.name and filtered by Forward" action=marketCards filter=Forward page=1 sortBy=card_id.name status=success
+time="2024-02-27T14:46:34+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T14:46:34+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T14:46:37+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T14:46:38+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T14:46:41+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=151
+time="2024-02-27T14:47:26+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=151
+time="2024-02-27T14:47:47+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=151
+time="2024-02-27T14:47:58+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T14:47:59+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T14:48:27+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=151
+time="2024-02-27T14:48:45+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T14:48:46+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T14:53:39+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T14:53:40+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T14:53:43+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=151
+time="2024-02-27T14:54:29+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=151
+time="2024-02-27T14:56:56+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T14:56:56+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T15:05:00+06:00" level=info msg=Admin action=login status=success
+time="2024-02-27T15:05:00+06:00" level=info msg="User on the admin page" action=admin status=success
+time="2024-02-27T15:05:00+06:00" level=info msg=Admin action=login status=success
+time="2024-02-27T15:05:00+06:00" level=error msg="Error fetching users" action=admin error="connection(ac-vr6vttd-shard-00-02.7w9s0t2.mongodb.net:27017[-8]) incomplete read of message header: context canceled" status=error
+time="2024-02-27T15:05:00+06:00" level=info msg="User on the admin page" action=admin status=success
+time="2024-02-27T15:05:02+06:00" level=info msg=Admin action=login status=success
+time="2024-02-27T15:05:02+06:00" level=error msg="Error fetching users" action=admin error="context canceled" status=error
+time="2024-02-27T15:05:02+06:00" level=info msg="User on the admin page" action=admin status=success
+time="2024-02-27T15:06:08+06:00" level=info msg="User on the admin page" action=admin status=success
+time="2024-02-27T15:11:36+06:00" level=info msg="User on the admin page" action=admin status=success
+time="2024-02-27T15:16:29+06:00" level=info msg="User login successfully" action=login status=success
+time="2024-02-27T15:17:51+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T15:17:52+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T15:50:43+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T15:50:43+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T15:50:49+06:00" level=info msg="Data was sorted by card_id.name" action=marketCards page=1 sortBy=card_id.name status=success
+time="2024-02-27T15:50:53+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-27T15:51:02+06:00" level=info msg="User login successfully" action=login status=success
+time="2024-02-27T15:51:05+06:00" level=info msg="User on the dailyQuestions page" action=dailyQuestions status=success
+time="2024-02-27T15:53:12+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=151
+time="2024-02-27T16:21:57+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=151
+time="2024-02-27T16:22:00+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T16:22:01+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T16:22:27+06:00" level=info msg="User login successfully" action=login status=success
+time="2024-02-27T16:22:31+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T16:22:32+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T16:23:48+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T16:23:48+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T16:28:04+06:00" level=error msg="Error get card from cards collection. Try again." action=cardToCollection error="mongo: no documents in result" status=error
+time="2024-02-27T16:34:50+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T16:34:51+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T16:36:13+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T16:36:13+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T16:36:18+06:00" level=info msg="Player was transfered to collection successfully!" action=cardToCollection status=success
+time="2024-02-27T16:38:19+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T16:38:20+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T16:38:24+06:00" level=info msg="Player was transfered to collection successfully!" action=cardToCollection status=success
+time="2024-02-27T16:40:57+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T16:40:58+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T16:41:03+06:00" level=info msg="Player was transfered to collection successfully!" action=cardToCollection status=success
+time="2024-02-27T16:44:08+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T16:44:08+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T16:44:16+06:00" level=info msg="Player was transfered to collection successfully!" action=cardToCollection status=success
+time="2024-02-27T16:53:43+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T16:53:43+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T16:53:45+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-27T16:54:01+06:00" level=info msg="User login successfully" action=login status=success
+time="2024-02-27T16:54:10+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T16:54:10+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T16:54:11+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-27T16:55:05+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-27T16:55:07+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T16:55:07+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T16:55:12+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-27T16:55:16+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-27T16:55:28+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-27T17:01:30+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T17:01:31+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T17:01:32+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-27T17:01:45+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-27T17:02:02+06:00" level=info msg="User login successfully" action=login status=success
+time="2024-02-27T17:02:05+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T17:02:05+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T17:02:06+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-27T17:02:11+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-27T17:02:27+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-27T17:02:30+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-27T17:02:34+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-27T17:02:45+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-27T17:02:48+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T17:02:48+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T17:05:48+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T17:05:48+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T17:05:48+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-27T17:07:26+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-27T17:07:30+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T17:07:31+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T17:07:32+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-27T17:38:05+06:00" level=info msg="User login successfully" action=login status=success
+time="2024-02-27T17:38:38+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T17:38:38+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T17:38:39+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-27T17:40:03+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-27T17:40:21+06:00" level=info msg="User login successfully" action=login status=success
+time="2024-02-27T17:40:23+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T17:40:24+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T17:40:25+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-27T17:41:16+06:00" level=error msg="Error parse file 'market.html'" action=market error="template: market.html:125: function \"token\" not defined" status=error
+time="2024-02-27T17:42:24+06:00" level=error msg="Error parse file 'market.html'" action=market error="template: market.html:125: function \"token\" not defined" status=error
+time="2024-02-27T17:43:59+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T17:43:59+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T17:44:04+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T17:44:05+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T17:46:34+06:00" level=error msg="Error parse file 'market.html'" action=market error="template: market.html:124: function \"token\" not defined" status=error
+time="2024-02-27T17:48:37+06:00" level=error msg="Error parse file 'market.html'" action=market error="template: market.html:125: function \"token\" not defined" status=error
+time="2024-02-27T17:50:07+06:00" level=info msg="User on the dailyQuestions page" action=dailyQuestions status=success
+time="2024-02-27T17:51:28+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-27T17:51:55+06:00" level=info msg="User login successfully" action=login status=success
+time="2024-02-27T17:51:57+06:00" level=info msg="User on the dailyQuestions page" action=dailyQuestions status=success
+time="2024-02-27T17:52:04+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-27T17:54:12+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-27T17:54:26+06:00" level=info msg="User login successfully" action=login status=success
+time="2024-02-27T17:54:28+06:00" level=info msg="User on the dailyQuestions page" action=dailyQuestions status=success
+time="2024-02-27T17:56:39+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-27T17:57:00+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-27T17:57:44+06:00" level=info msg="User on the dailyQuestions page" action=dailyQuestions status=success
+time="2024-02-27T17:59:12+06:00" level=error msg="Error parse file 'market.html'" action=market error="template: market.html:125: function \"token\" not defined" status=error
+time="2024-02-27T17:59:17+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=151
+time="2024-02-27T22:50:34+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-27T22:50:50+06:00" level=info msg="User login successfully" action=login status=success
+time="2024-02-27T22:50:53+06:00" level=info msg="User on the dailyQuestions page" action=dailyQuestions status=success
+time="2024-02-27T22:50:56+06:00" level=error msg="Error parse file 'market.html'" action=market error="template: market.html:125: function \"token\" not defined" status=error
+time="2024-02-27T22:50:59+06:00" level=error msg="Error parse file 'market.html'" action=market error="template: market.html:125: function \"token\" not defined" status=error
+time="2024-02-27T22:51:23+06:00" level=error msg="Error parse file 'market.html'" action=market error="template: market.html:125: function \"token\" not defined" status=error
+time="2024-02-27T22:51:24+06:00" level=error msg="Error parse file 'market.html'" action=market error="template: market.html:125: function \"token\" not defined" status=error
+time="2024-02-27T22:51:27+06:00" level=error msg="Error parse file 'market.html'" action=market error="template: market.html:125: function \"token\" not defined" status=error
+time="2024-02-27T22:51:28+06:00" level=error msg="Error parse file 'market.html'" action=market error="template: market.html:125: function \"token\" not defined" status=error
+time="2024-02-27T22:52:04+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T22:52:05+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T22:55:13+06:00" level=error msg="Error parse file 'market.html'" action=market error="template: market.html:125: function \"token\" not defined" status=error
+time="2024-02-27T22:55:14+06:00" level=error msg="Error parse file 'market.html'" action=market error="template: market.html:125: function \"token\" not defined" status=error
+time="2024-02-27T22:55:26+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T22:55:26+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T22:55:29+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T22:55:29+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T22:56:13+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T22:56:14+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T22:56:34+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T22:56:34+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T22:56:35+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-27T22:57:22+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T22:57:22+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T22:57:25+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T22:57:25+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T22:59:40+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T22:59:41+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T22:59:41+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-27T23:01:08+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T23:01:08+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T23:01:09+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-27T23:02:43+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T23:02:43+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T23:02:46+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T23:02:46+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T23:03:35+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T23:03:35+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T23:03:37+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-27T23:03:58+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T23:03:58+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T23:04:02+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T23:04:02+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T23:04:05+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T23:04:05+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T23:05:15+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T23:05:15+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T23:05:21+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T23:05:21+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T23:05:26+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T23:05:26+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T23:08:41+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T23:08:41+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T23:08:52+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T23:08:52+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T23:10:16+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T23:10:16+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T23:10:22+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T23:10:23+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T23:12:33+06:00" level=info msg="Player was transfered to collection successfully!" action=cardToCollection status=success
+time="2024-02-27T23:12:42+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T23:12:42+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T23:20:15+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T23:20:16+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T23:20:21+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-27T23:20:33+06:00" level=error msg="User with email: 'johndoe@gmail.com' already exists. Try again." action=createUser error="User with email: 'johndoe@gmail.com' already exists. Try again." status=error
+time="2024-02-27T23:20:46+06:00" level=error msg="Incorrect password entered. Try again." action=login error="crypto/bcrypt: hashedPassword is not the hash of the given password" status=error
+time="2024-02-27T23:20:51+06:00" level=info msg="User login successfully" action=login status=success
+time="2024-02-27T23:27:35+06:00" level=info msg=Admin action=login status=success
+time="2024-02-27T23:27:35+06:00" level=info msg="User on the admin page" action=admin status=success
+time="2024-02-27T23:28:30+06:00" level=info msg="User on the admin page" action=admin status=success
+time="2024-02-27T23:28:57+06:00" level=info msg="User on the admin page" action=admin status=success
+time="2024-02-27T23:29:12+06:00" level=info msg="User on the admin page" action=admin status=success
+time="2024-02-27T23:29:23+06:00" level=info msg="User on the admin page" action=admin status=success
+time="2024-02-27T23:29:37+06:00" level=info msg="User on the admin page" action=admin status=success
+time="2024-02-27T23:29:49+06:00" level=info msg="User on the admin page" action=admin status=success
+time="2024-02-27T23:30:02+06:00" level=info msg="User on the admin page" action=admin status=success
+time="2024-02-27T23:30:20+06:00" level=info msg="User on the admin page" action=admin status=success
+time="2024-02-27T23:30:34+06:00" level=info msg="User on the admin page" action=admin status=success
+time="2024-02-27T23:30:52+06:00" level=info msg="User was deleted." action=deleteUser status=success
+time="2024-02-27T23:34:36+06:00" level=info msg="User on the admin page" action=admin status=success
+time="2024-02-27T23:40:00+06:00" level=info msg="User login successfully" action=login status=success
+time="2024-02-27T23:40:02+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-27T23:40:07+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-27T23:40:11+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-27T23:40:14+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-27T23:40:17+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-27T23:42:21+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T23:42:22+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T23:42:24+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=1
+time="2024-02-27T23:42:24+06:00" level=error msg="Failed to fetch team data. Try to reload page." action=getTeam error="mongo: no documents in result" status=error
+time="2024-02-27T23:42:31+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-27T23:42:31+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-27T23:42:36+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=1
+time="2024-02-27T23:42:36+06:00" level=error msg="Failed to fetch team data. Try to reload page." action=getTeam error="mongo: no documents in result" status=error
+time="2024-02-27T23:48:11+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=1
+time="2024-02-27T23:48:21+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=1
+time="2024-02-27T23:48:33+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=1
+time="2024-02-27T23:48:33+06:00" level=error msg="Failed to fetch team data. Try to reload page." action=getTeam error="mongo: no documents in result" status=error
+time="2024-02-27T23:50:25+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=1
+time="2024-02-27T23:50:49+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=1
+time="2024-02-27T23:50:56+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=1
+time="2024-02-27T23:50:57+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=1
+time="2024-02-27T23:50:58+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=1
+time="2024-02-27T23:51:14+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=1
+time="2024-02-27T23:51:22+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=1
+time="2024-02-27T23:53:00+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=1
+time="2024-02-27T23:53:01+06:00" level=error msg="Failed to fetch team data. Try to reload page." action=getTeam error="mongo: no documents in result" status=error
+time="2024-02-27T23:53:51+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=1
+time="2024-02-27T23:53:51+06:00" level=error msg="Failed to fetch team data. Try to reload page." action=getTeam error="mongo: no documents in result" status=error
+time="2024-02-27T23:54:15+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=1
+time="2024-02-27T23:54:15+06:00" level=error msg="Failed to fetch team data. Try to reload page." action=getTeam error="mongo: no documents in result" status=error
+time="2024-02-27T23:54:18+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=1
+time="2024-02-27T23:54:18+06:00" level=error msg="Failed to fetch team data. Try to reload page." action=getTeam error="mongo: no documents in result" status=error
+time="2024-02-27T23:54:57+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=1
+time="2024-02-27T23:55:36+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=1
+time="2024-02-27T23:55:39+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=1
+time="2024-02-27T23:55:43+06:00" level=info msg="Team saved successfully." action=saveTeam status=success
+time="2024-02-27T23:55:46+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=1
+time="2024-02-27T23:55:52+06:00" level=info msg="Team saved successfully." action=saveTeam status=success
+time="2024-02-27T23:55:55+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=1
+time="2024-02-27T23:56:43+06:00" level=info msg="Team saved successfully." action=saveTeam status=success
+time="2024-02-27T23:56:45+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=1
+time="2024-02-27T23:56:59+06:00" level=info msg="Team saved successfully." action=saveTeam status=success
+time="2024-02-27T23:57:01+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=1
+time="2024-02-27T23:57:05+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=1
+time="2024-02-27T23:59:34+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=1
+time="2024-02-27T23:59:38+06:00" level=info msg="Team saved successfully." action=saveTeam status=success
+time="2024-02-27T23:59:42+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=1
+time="2024-02-28T00:00:43+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=1
+time="2024-02-28T00:00:47+06:00" level=info msg="Team saved successfully." action=saveTeam status=success
+time="2024-02-28T00:02:03+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=1
+time="2024-02-28T00:02:11+06:00" level=info msg="Team saved successfully." action=saveTeam status=success
+time="2024-02-28T00:04:07+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=1
+time="2024-02-28T00:04:15+06:00" level=info msg="Team saved successfully." action=saveTeam status=success
+time="2024-02-28T00:04:18+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=1
+time="2024-02-28T00:05:27+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=1
+time="2024-02-28T00:05:33+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=1
+time="2024-02-28T00:05:34+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-28T00:05:34+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-28T00:05:36+06:00" level=info msg="User on the dailyQuestions page" action=dailyQuestions status=success
+time="2024-02-28T00:08:17+06:00" level=info msg="User on the dailyQuestions page" action=dailyQuestions status=success
+time="2024-02-28T00:08:19+06:00" level=info msg="User on the dailyQuestions page" action=dailyQuestions status=success
+time="2024-02-28T00:08:21+06:00" level=info msg="User on the dailyQuestions page" action=dailyQuestions status=success
+time="2024-02-28T00:09:40+06:00" level=info msg="User on the dailyQuestions page" action=dailyQuestions status=success
+time="2024-02-28T00:09:46+06:00" level=info msg="User on the dailyQuestions page" action=dailyQuestions status=success
+time="2024-02-28T00:09:49+06:00" level=info msg="User on the dailyQuestions page" action=dailyQuestions status=success
+time="2024-02-28T00:11:59+06:00" level=info msg="User on the dailyQuestions page" action=dailyQuestions status=success
+time="2024-02-28T00:13:07+06:00" level=info msg="User on the dailyQuestions page" action=dailyQuestions status=success
+time="2024-02-28T00:16:15+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-28T00:16:15+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-28T00:16:52+06:00" level=info msg="User login successfully" action=login status=success
+time="2024-02-28T00:16:54+06:00" level=info msg="User on the dailyQuestions page" action=dailyQuestions status=success
+time="2024-02-28T00:17:18+06:00" level=info msg="User on the dailyQuestions page" action=dailyQuestions status=success
+time="2024-02-28T00:17:47+06:00" level=info msg="The answers submitted. Good luck getting your new card tomorrow!" action=giveCard status=success
+time="2024-02-28T00:17:50+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-28T00:18:43+06:00" level=info msg="The answers submitted. Good luck getting your new card tomorrow!" action=giveCard status=success
+time="2024-02-28T00:19:04+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-28T00:23:08+06:00" level=info msg="The answers submitted. Good luck getting your new card tomorrow!" action=giveCard status=success
+time="2024-02-28T00:23:09+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-28T00:23:11+06:00" level=info msg="User on the dailyQuestions page" action=dailyQuestions status=success
+time="2024-02-28T00:23:29+06:00" level=info msg="User on the dailyQuestions page" action=dailyQuestions status=success
+time="2024-02-28T00:23:44+06:00" level=info msg="The answers submitted. Good luck getting your new card tomorrow!" action=giveCard status=success
+time="2024-02-28T00:23:56+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=5
+time="2024-02-28T00:24:24+06:00" level=info msg="The answers submitted. Good luck getting your new card tomorrow!" action=giveCard status=success
+time="2024-02-28T00:24:28+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=5
+time="2024-02-28T00:24:37+06:00" level=info msg="The answers submitted. Good luck getting your new card tomorrow!" action=giveCard status=success
+time="2024-02-28T00:24:38+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=5
+time="2024-02-28T00:24:43+06:00" level=info msg="The answers submitted. Good luck getting your new card tomorrow!" action=giveCard status=success
+time="2024-02-28T00:24:46+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=5
+time="2024-02-28T00:24:59+06:00" level=info msg="The answers submitted. Good luck getting your new card tomorrow!" action=giveCard status=success
+time="2024-02-28T00:25:01+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=5
+time="2024-02-28T00:25:11+06:00" level=info msg="The card Ruben Dias has been added to your collection successfully." action=giveCard status=success
+time="2024-02-28T00:25:14+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=5
+time="2024-02-28T00:25:17+06:00" level=info msg="User on the dailyQuestions page" action=dailyQuestions status=success
+time="2024-02-28T00:26:01+06:00" level=info msg="User on the dailyQuestions page" action=dailyQuestions status=success
+time="2024-02-28T00:26:06+06:00" level=info msg="The answers submitted. Good luck getting your new card tomorrow!" action=giveCard status=success
+time="2024-02-28T00:27:47+06:00" level=info msg="The answers submitted. Good luck getting your new card tomorrow!" action=giveCard status=success
+time="2024-02-28T00:28:20+06:00" level=info msg="The answers submitted. Good luck getting your new card tomorrow!" action=giveCard status=success
+time="2024-02-28T00:29:05+06:00" level=info msg="The answers submitted. Good luck getting your new card tomorrow!" action=giveCard status=success
+time="2024-02-28T00:29:26+06:00" level=info msg="The answers submitted. Good luck getting your new card tomorrow!" action=giveCard status=success
+time="2024-02-28T00:29:33+06:00" level=info msg="User on the dailyQuestions page" action=dailyQuestions status=success
+time="2024-02-28T00:29:51+06:00" level=info msg="User on the dailyQuestions page" action=dailyQuestions status=success
+time="2024-02-28T00:29:56+06:00" level=info msg="The answers submitted. Good luck getting your new card tomorrow!" action=giveCard status=success
+time="2024-02-28T00:30:21+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=5
+time="2024-02-28T00:31:53+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=5
+time="2024-02-28T00:31:57+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-28T00:31:58+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-28T00:32:04+06:00" level=info msg="Data was sorted by card_id.name" action=marketCards page=1 sortBy=card_id.name status=success
+time="2024-02-28T00:32:06+06:00" level=info msg="Data was sorted by card_id.card_id" action=marketCards page=1 sortBy=card_id.card_id status=success
+time="2024-02-28T00:32:08+06:00" level=info msg="Data was sorted by card_id.card_id and filtered by Forward" action=marketCards filter=Forward page=1 sortBy=card_id.card_id status=success
+time="2024-02-28T00:32:10+06:00" level=info msg="Data was sorted by card_id.card_id and filtered by Midfielder" action=marketCards filter=Midfielder page=1 sortBy=card_id.card_id status=success
+time="2024-02-28T00:32:12+06:00" level=info msg="Data was sorted by card_id.card_id and filtered by Defender" action=marketCards filter=Defender page=1 sortBy=card_id.card_id status=success
+time="2024-02-28T00:32:14+06:00" level=info msg="Data was sorted by card_id.card_id and filtered by Goalkeeper" action=marketCards filter=Goalkeeper page=1 sortBy=card_id.card_id status=success
+time="2024-02-28T00:32:16+06:00" level=info msg="Data was sorted by card_id.card_id and filtered by Manager" action=marketCards filter=Manager page=1 sortBy=card_id.card_id status=success
+time="2024-02-28T00:32:20+06:00" level=info msg="Data was sorted by card_id.card_id and filtered by Forward" action=marketCards filter=Forward page=1 sortBy=card_id.card_id status=success
+time="2024-02-28T00:32:35+06:00" level=info msg="Player was transfered to collection successfully!" action=cardToCollection status=success
+time="2024-02-28T00:32:42+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-28T00:32:43+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-28T00:32:48+06:00" level=info msg="User on the dailyQuestions page" action=dailyQuestions status=success
+time="2024-02-28T00:33:02+06:00" level=info msg="The answers submitted. Good luck getting your new card tomorrow!" action=giveCard status=success
+time="2024-02-28T00:35:31+06:00" level=info msg="User on the dailyQuestions page" action=dailyQuestions status=success
+time="2024-02-28T00:35:44+06:00" level=info msg="User on the dailyQuestions page" action=dailyQuestions status=success
+time="2024-02-28T00:35:48+06:00" level=info msg="The answers submitted. Good luck getting your new card tomorrow!" action=giveCard status=success
+time="2024-02-28T18:04:32+06:00" level=info msg="User login successfully" action=login status=success
+time="2024-02-28T18:05:18+06:00" level=info msg="User on the dailyQuestions page" action=dailyQuestions status=success
+time="2024-02-28T18:05:22+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-28T18:05:22+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-28T18:05:24+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=7
+time="2024-02-28T18:05:28+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-28T18:05:28+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-28T18:05:32+06:00" level=info msg="Player was transfered to collection successfully!" action=cardToCollection status=success
+time="2024-02-28T18:05:35+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-28T18:05:35+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-28T18:06:12+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=7
+time="2024-02-28T18:11:52+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=7
+time="2024-02-28T18:14:36+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=7
+time="2024-02-28T18:14:57+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=7
+time="2024-02-28T18:15:33+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=7
+time="2024-02-28T18:15:50+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=7
+time="2024-02-28T18:16:55+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=7
+time="2024-02-28T18:18:23+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=7
+time="2024-02-28T18:32:17+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=7
+time="2024-02-28T18:33:51+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=7
+time="2024-02-28T18:43:22+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=7
+time="2024-02-29T20:41:51+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-29T20:42:06+06:00" level=info msg="User login successfully" action=login status=success
+time="2024-02-29T20:42:10+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=1
+time="2024-02-29T20:42:19+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-29T20:42:19+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-29T20:42:24+06:00" level=info msg="Data was sorted by card_id.card_id" action=marketCards page=1 sortBy=card_id.card_id status=success
+time="2024-02-29T20:42:26+06:00" level=info msg="Data was sorted by card_id.card_id and filtered by Forward" action=marketCards filter=Forward page=1 sortBy=card_id.card_id status=success
+time="2024-02-29T20:42:29+06:00" level=info msg="User on the dailyQuestions page" action=dailyQuestions status=success
+time="2024-02-29T20:44:33+06:00" level=info msg="User on the dailyQuestions page" action=dailyQuestions status=success
+time="2024-02-29T20:44:37+06:00" level=info msg="User on the dailyQuestions page" action=dailyQuestions status=success
+time="2024-02-29T20:50:11+06:00" level=info msg="User on the dailyQuestions page" action=dailyQuestions status=success
+time="2024-02-29T20:50:16+06:00" level=info msg="The answers submitted. Good luck getting your new card tomorrow!" action=giveCard status=success
+time="2024-02-29T20:50:34+06:00" level=info msg="The answers submitted. Good luck getting your new card tomorrow!" action=giveCard status=success
+time="2024-02-29T20:50:51+06:00" level=info msg="User on the dailyQuestions page" action=dailyQuestions status=success
+time="2024-02-29T20:51:16+06:00" level=info msg="User on the dailyQuestions page" action=dailyQuestions status=success
+time="2024-02-29T20:52:12+06:00" level=info msg="The answers submitted. Good luck getting your new card tomorrow!" action=giveCard status=success
+time="2024-02-29T21:08:52+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=1
+time="2024-02-29T21:08:56+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=1
+time="2024-02-29T21:09:23+06:00" level=info msg="Team saved successfully." action=saveTeam status=success
+time="2024-02-29T21:09:27+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=1
+time="2024-02-29T21:09:30+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=1
+time="2024-02-29T21:13:10+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=1
+time="2024-02-29T21:15:17+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=1
+time="2024-02-29T21:16:14+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=1
+time="2024-02-29T21:17:05+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=1
+time="2024-02-29T21:17:26+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=1
+time="2024-02-29T21:21:10+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=1
+time="2024-02-29T21:27:16+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=1
+time="2024-02-29T21:29:21+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=1
+time="2024-02-29T21:31:12+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-29T21:31:21+06:00" level=error msg="Incorrect login entered. Try again." action=login error="mongo: no documents in result" status=error
+time="2024-02-29T21:31:29+06:00" level=error msg="Incorrect login entered. Try again." action=login error="mongo: no documents in result" status=error
+time="2024-02-29T21:31:34+06:00" level=error msg="Incorrect login entered. Try again." action=login error="mongo: no documents in result" status=error
+time="2024-02-29T21:31:45+06:00" level=error msg="Incorrect login entered. Try again." action=login error="mongo: no documents in result" status=error
+time="2024-02-29T21:32:15+06:00" level=info msg="User login successfully" action=login status=success
+time="2024-02-29T21:32:17+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=2
+time="2024-02-29T21:35:12+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=2
+time="2024-02-29T21:35:38+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=1
+time="2024-02-29T21:35:41+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=1
+time="2024-02-29T21:36:05+06:00" level=info msg="User on the dailyQuestions page" action=dailyQuestions status=success
+time="2024-02-29T21:36:49+06:00" level=info msg="User on the dailyQuestions page" action=dailyQuestions status=success
+time="2024-02-29T21:37:04+06:00" level=info msg="The answers submitted. Good luck getting your new card tomorrow!" action=giveCard status=success
+time="2024-02-29T21:37:35+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=1
+time="2024-02-29T21:37:53+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-02-29T21:37:53+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-02-29T21:37:56+06:00" level=info msg="User on the dailyQuestions page" action=dailyQuestions status=success
+time="2024-02-29T21:38:18+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-29T21:38:26+06:00" level=info msg=Admin action=login status=success
+time="2024-02-29T21:38:26+06:00" level=info msg="User on the admin page" action=admin status=success
+time="2024-02-29T21:45:16+06:00" level=info msg="User was deleted." action=deleteUser status=success
+time="2024-02-29T21:45:18+06:00" level=info msg="User on the admin page" action=admin status=success
+time="2024-02-29T21:54:42+06:00" level=info msg="User on the admin page" action=admin status=success
+time="2024-02-29T22:01:27+06:00" level=info msg="User on the admin page" action=admin status=success
+time="2024-02-29T22:41:14+06:00" level=info msg="User on the admin page" action=admin status=success
+time="2024-02-29T22:42:18+06:00" level=info msg="User on the admin page" action=admin status=success
+time="2024-02-29T22:42:45+06:00" level=info msg="User on the admin page" action=admin status=success
+time="2024-02-29T22:43:22+06:00" level=error msg="Error decoding new card data. Try again." action=addCard error=EOF status=error
+time="2024-02-29T22:44:06+06:00" level=error msg="Error decoding new card data. Try again." action=addCard error=EOF status=error
+time="2024-02-29T22:45:29+06:00" level=error msg="Error decoding new card data. Try again." action=addCard error=EOF status=error
+time="2024-02-29T22:47:59+06:00" level=info msg="User on the admin page" action=admin status=success
+time="2024-02-29T22:49:32+06:00" level=info msg="User on the admin page" action=admin status=success
+time="2024-02-29T22:52:54+06:00" level=info msg="User on the admin page" action=admin status=success
+time="2024-02-29T22:55:45+06:00" level=info msg="User on the admin page" action=admin status=success
+time="2024-02-29T22:57:24+06:00" level=info msg="User on the admin page" action=admin status=success
+time="2024-02-29T22:57:32+06:00" level=error msg="Invalid position. Position must be Forward, Midfielder, Defender, Manager or Goalkeeper." action=addCard error="Invalid input" status=error
+time="2024-02-29T22:57:43+06:00" level=error msg="Invalid position. Position must be Forward, Midfielder, Defender, Manager or Goalkeeper." action=addCard error="Invalid input" status=error
+time="2024-02-29T22:57:48+06:00" level=info msg="New card added to collection successfully!" action=addCard status=success
+time="2024-02-29T22:57:54+06:00" level=info msg="User on the admin page" action=admin status=success
+time="2024-02-29T23:30:00+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-29T23:30:28+06:00" level=error msg="Error send message. Try again." action=createUser error="535 5.7.8 Username and Password not accepted. For more information, go to\n5.7.8  https://support.google.com/mail/?p=BadCredentials y24-20020a197518000000b00513137b0178sm321313lfe.91 - gsmtp" status=error
+time="2024-02-29T23:37:45+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-29T23:37:55+06:00" level=error msg="User with email: 'samalmakulbekova@gmail.com' already exists. Try again." action=createUser error="User with email: 'samalmakulbekova@gmail.com' already exists. Try again." status=error
+time="2024-02-29T23:38:11+06:00" level=info msg="User on the admin page" action=admin status=success
+time="2024-02-29T23:38:18+06:00" level=info msg="User was deleted." action=deleteUser status=success
+time="2024-02-29T23:38:19+06:00" level=info msg="User on the admin page" action=admin status=success
+time="2024-02-29T23:38:22+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-29T23:38:30+06:00" level=error msg="Error send message. Try again." action=createUser error="535 5.7.8 Username and Password not accepted. For more information, go to\n5.7.8  https://support.google.com/mail/?p=BadCredentials i16-20020a056512341000b005131ca6b68esm322945lfr.31 - gsmtp" status=error
+time="2024-02-29T23:39:51+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-29T23:40:10+06:00" level=error msg="Error send message. Try again." action=createUser error="535 5.7.8 Username and Password not accepted. For more information, go to\n5.7.8  https://support.google.com/mail/?p=BadCredentials w13-20020a2e300d000000b002d11c55fee2sm282193ljw.127 - gsmtp" status=error
+time="2024-02-29T23:40:31+06:00" level=info msg="User on the admin page" action=admin status=success
+time="2024-02-29T23:40:38+06:00" level=info msg="User was deleted." action=deleteUser status=success
+time="2024-02-29T23:40:39+06:00" level=info msg="User on the admin page" action=admin status=success
+time="2024-02-29T23:40:45+06:00" level=info msg="User was deleted." action=deleteUser status=success
+time="2024-02-29T23:40:46+06:00" level=info msg="User on the admin page" action=admin status=success
+time="2024-02-29T23:45:20+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-29T23:45:34+06:00" level=error msg="Error send message. Try again." action=createUser error="535 5.7.8 Username and Password not accepted. For more information, go to\n5.7.8  https://support.google.com/mail/?p=BadCredentials g14-20020a19e04e000000b00513210293bcsm329131lfj.56 - gsmtp" status=error
+time="2024-02-29T23:49:58+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-02-29T23:50:07+06:00" level=error msg="Error send message. Try again." action=createUser error="535 5.7.8 Username and Password not accepted. For more information, go to\n5.7.8  https://support.google.com/mail/?p=BadCredentials t11-20020a056512208b00b005131cf6ea51sm324786lfr.8 - gsmtp" status=error
+time="2024-03-01T00:10:38+06:00" level=info msg="User on the admin page" action=admin status=success
+time="2024-03-01T00:10:45+06:00" level=info msg="User was deleted." action=deleteUser status=success
+time="2024-03-01T00:10:47+06:00" level=info msg="User on the admin page" action=admin status=success
+time="2024-03-01T00:10:56+06:00" level=info msg="User was deleted." action=deleteUser status=success
+time="2024-03-01T00:10:57+06:00" level=info msg="User on the admin page" action=admin status=success
+time="2024-03-01T12:39:01+05:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-03-01T12:39:16+05:00" level=info msg="User created successfully. Log in to the account" action=createUser status=success
+time="2024-03-01T12:39:20+05:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-03-01T13:21:58+05:00" level=info msg="User on the admin page" action=admin status=success
+time="2024-03-01T13:22:05+05:00" level=info msg="User was deleted." action=deleteUser status=success
+time="2024-03-01T13:22:07+05:00" level=info msg="User on the admin page" action=admin status=success
+time="2024-03-01T13:22:12+05:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-03-01T13:22:22+05:00" level=info msg="User created successfully. Confirm your email and log in." action=createUser status=success
+time="2024-03-01T13:22:25+05:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-03-01T13:22:39+05:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-03-01T13:22:56+05:00" level=error msg="Incorrect login entered. Try again." action=login error="mongo: no documents in result" status=error
+time="2024-03-01T13:23:01+05:00" level=error msg="Incorrect login entered. Try again." action=login error="mongo: no documents in result" status=error
+time="2024-03-01T13:23:43+05:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-03-01T13:23:46+05:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-03-01T13:23:56+05:00" level=info msg="User created successfully. Confirm your email and log in." action=createUser status=success
+time="2024-03-01T13:23:58+05:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-03-01T13:24:09+05:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-03-01T13:24:31+05:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-03-01T13:24:35+05:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-03-01T13:24:39+05:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-03-01T13:24:42+05:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-03-01T13:25:46+05:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-03-01T13:25:47+05:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-03-01T13:26:04+05:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-03-01T13:26:06+05:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-03-01T14:57:33+05:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-03-01T14:57:44+05:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-03-01T14:59:07+05:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-03-01T14:59:12+05:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-03-01T14:59:14+05:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-03-01T14:59:20+05:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-03-01T15:00:05+05:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-03-01T15:00:06+05:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-03-01T15:00:30+05:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-03-01T15:00:45+05:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-03-01T15:00:46+05:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-03-01T15:00:47+05:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-03-01T15:00:47+05:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-03-01T15:00:47+05:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-03-01T15:00:56+05:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-03-01T15:02:50+05:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-03-01T15:03:07+05:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-03-01T15:03:11+05:00" level=info msg="Email confirmed successfully. You can log in" action=createUser status=success
+time="2024-03-01T15:03:51+05:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-03-01T15:03:58+05:00" level=info msg="User login successfully" action=login status=success
+time="2024-03-01T15:04:01+05:00" level=info msg="User accessed the collection page" action=collection status=success userID=150
+time="2024-03-01T15:04:07+05:00" level=info msg="User on the market page" action=market status=success
+time="2024-03-01T15:04:07+05:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-03-01T15:04:12+05:00" level=info msg="User on the dailyQuestions page" action=dailyQuestions status=success
+time="2024-03-01T15:04:46+05:00" level=info msg="The answers submitted. Good luck getting your new card tomorrow!" action=giveCard status=success
+time="2024-03-01T15:04:55+05:00" level=info msg="The answers submitted. Good luck getting your new card tomorrow!" action=giveCard status=success
+time="2024-03-01T15:13:45+05:00" level=info msg="User on the admin page" action=admin status=success
+time="2024-03-01T15:13:51+05:00" level=info msg="User was deleted." action=deleteUser status=success
+time="2024-03-01T15:13:53+05:00" level=info msg="User on the admin page" action=admin status=success
+time="2024-03-01T15:14:36+05:00" level=info msg="User on the admin page" action=admin status=success
+time="2024-03-01T15:24:43+05:00" level=info msg="User on the admin page" action=admin status=success
+time="2024-03-01T15:27:15+05:00" level=info msg="User on the admin page" action=admin status=success
+time="2024-03-01T15:27:58+05:00" level=info msg="User on the admin page" action=admin status=success
+time="2024-03-01T15:28:00+05:00" level=info msg="User on the admin page" action=admin status=success
+time="2024-03-01T15:28:10+05:00" level=info msg="User on the admin page" action=admin status=success
+time="2024-03-01T15:28:38+05:00" level=info msg="User on the admin page" action=admin status=success
+time="2024-03-01T15:29:18+05:00" level=info msg="User on the admin page" action=admin status=success
+time="2024-03-01T15:29:39+05:00" level=error msg="Invalid position. Right option must be 'a', 'b', 'c' or 'd'." action=addCard error="invalid input" status=error
+time="2024-03-01T15:29:46+05:00" level=info msg="New question added to collection successfully!" action=addQuestion status=success
+time="2024-03-01T15:29:48+05:00" level=info msg="User on the admin page" action=admin status=success

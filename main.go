@@ -15,7 +15,7 @@ import (
 	"time"
 
 	"golang.org/x/time/rate"
-
+	"gopkg.in/gomail.v2"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
 	"github.com/natefinch/lumberjack"
@@ -35,6 +35,11 @@ var limiter = rate.NewLimiter(1, 3)
 type User struct {
 	ID       string `bson:"_id,omitempty"`
 	User_id  string `json:"user_id"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+type ConfirmUser struct {
+	ID       string `bson:"_id,omitempty"`
 	Email    string `json:"email"`
 	Password string `json:"password"`
 }
@@ -135,106 +140,12 @@ func getUserByID(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-// НАДО ИСПРАВИТЬ
-func updateUser(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPut {
-		http.Error(w, "Only PUT requests are allowed", http.StatusMethodNotAllowed)
-		return
-	}
-
-	var updatedUser User
-	decoder := json.NewDecoder(r.Body)
-	if err := decoder.Decode(&updatedUser); err != nil {
-		http.Error(w, "Invalid JSON format", http.StatusBadRequest)
-		return
-	}
-	objID, _ := primitive.ObjectIDFromHex(updatedUser.ID)
-	result, err := db.Collection("users").UpdateOne(r.Context(), bson.M{"_id": objID}, bson.M{"$set": updatedUser})
-	if err != nil {
-		log.Fatal(err)
-		http.Error(w, "Error updating user", http.StatusInternalServerError)
-		return
-	}
-
-	respondWithJSON(w, http.StatusOK, map[string]interface{}{
-		"status":  "success",
-		"message": fmt.Sprintf("User updated: %d document(s) modified", result.ModifiedCount),
-	})
-}
-func deleteUser(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodDelete {
-		http.Error(w, "Only DELETE requests are allowed", http.StatusMethodNotAllowed)
-		return
-	}
-	userID := r.URL.Query().Get("id")
-	_, err := db.Collection("users").DeleteOne(r.Context(), bson.M{"user_id": userID})
-	if err != nil {
-		sendErrorMessage(w, "deleteUser", err, "Error deleting user. Try again.")
-		return
-	}
-	_, err = db.Collection("collections").DeleteOne(r.Context(), bson.M{"user_id": userID})
-	if err != nil {
-		sendErrorMessage(w, "deleteUser", err, "Error deleting users collection. Try again.")
-		return
-	}
-	_, err = db.Collection("user_questions").DeleteOne(r.Context(), bson.M{"user_id": userID})
-	if err != nil {
-		sendErrorMessage(w, "deleteUser", err, "Error deleting users questions collection. Try again.")
-		return
-	}
-	_, err = db.Collection("teams").DeleteOne(r.Context(), bson.M{"user_id": userID})
-	if err != nil {
-		sendErrorMessage(w, "deleteUser", err, "Error deleting users team. Try again.")
-		return
-	}
-	_, err = db.Collection("cards_in_deal").DeleteMany(r.Context(), bson.M{"user_id": userID})
-	if err != nil {
-		sendErrorMessage(w, "deleteUser", err, "Error deleting users cards in deal. Try again.")
-		return
-	}
-	sendSuccessMessage(w, "deleteUser", "User was deleted.", "")
-}
-func getAllUsers(w http.ResponseWriter, r *http.Request) {
-	cursor, err := db.Collection("users").Find(r.Context(), bson.D{})
-	if err != nil {
-		logger.WithFields(logrus.Fields{
-			"action": "getAllUsers",
-			"status": "error",
-			"error":  err.Error(),
-		}).Error("Error fetching users")
-		http.Error(w, "Error fetching users", http.StatusInternalServerError)
-		return
-	}
-	defer cursor.Close(r.Context())
-
-	var users []User
-	if err := cursor.All(r.Context(), &users); err != nil {
-		logger.WithFields(logrus.Fields{
-			"action": "getAllUsers",
-			"status": "error",
-			"error":  err.Error(),
-		}).Error("Error decoding users")
-		http.Error(w, "Error decoding users", http.StatusInternalServerError)
-		return
-	}
-	logger.WithFields(logrus.Fields{
-		"action": "getAllUsers",
-		"status": "success",
-	}).Info("Users was found")
-	respondWithJSON(w, http.StatusOK, map[string]interface{}{
-		"status": "success",
-		"users":  users,
-	})
-}
-
 // /////////////////////////////////////////////////////////////////// Regisration page
 func createUser(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Only POST requests are allowed", http.StatusMethodNotAllowed)
 		return
 	}
-	// НАДО ИСПРАВИТЬ
-	userID, _ := db.Collection("users").CountDocuments(r.Context(), bson.M{})
 	email := r.URL.Query().Get("email")
 	password := r.URL.Query().Get("password")
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
@@ -242,8 +153,7 @@ func createUser(w http.ResponseWriter, r *http.Request) {
 		sendErrorMessage(w, "createUser", err, "Error hashing password. Try to register again.")
 		return
 	}
-	newUser := User{
-		User_id:  strconv.FormatInt(userID+1, 10),
+	newUser := ConfirmUser{
 		Email:    email,
 		Password: string(hashedPassword),
 	}
@@ -254,9 +164,67 @@ func createUser(w http.ResponseWriter, r *http.Request) {
 		sendErrorMessage(w, "createUser", errors.New(errorMessage), errorMessage)
 		return
 	}
+	_, err = db.Collection("confirm_users").InsertOne(r.Context(),newUser)
+	if err != nil {
+		errorMessage := "error add user. try again"
+		sendErrorMessage(w, "createUser", errors.New(errorMessage), errorMessage)
+		return
+	}
+	////////////////////////////////// gmail message
+	body := fmt.Sprintf("Для подтверждения почты перейдите по ссылке: https://advprog1.onrender.com/confirmPage?email=%s", email)
+
+    // Настройка клиента для отправки письма
+    m := gomail.NewMessage()
+    m.SetHeader("From", "nurlanovernur33@gmail.com")
+    m.SetHeader("To", email)
+    m.SetHeader("Subject", "Подтверждение почты")
+    m.SetBody("text/plain", body)
+
+    // Отправка письма
+    d := gomail.NewDialer("smtp.gmail.com", 587, "nurlanovernur33@gmail.com", "hlwa hlzl epre rhfd")
+    if err := d.DialAndSend(m); 
+		err != nil {
+			sendErrorMessage(w, "createUser", err, "Error send message. Try again.")
+      return
+    }
+		////////////////////////////////
+	sendSuccessMessage(w, "createUser", "User created successfully. Confirm your email and log in.", "")
+}
+func confirmPage(w http.ResponseWriter, r *http.Request) {
+	email := r.URL.Query().Get("email")
+	tmpl, err := template.ParseFiles("confirm.html")
+	if err != nil {
+		logger.WithFields(logrus.Fields{
+			"action": "collection",
+			"status": "error",
+			"error":  err.Error(),
+		}).Error("Error parsing template file 'collection.html'")
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+	tmpl.ExecuteTemplate(w, "confirm.html", email)
+	logger.WithFields(logrus.Fields{
+		"action": "registerPage",
+		"status": "success",
+	}).Info("User on the page.")
+}
+func confirm(w http.ResponseWriter, r *http.Request) {
+	email := r.URL.Query().Get("email")
+	userID, _ := db.Collection("users").CountDocuments(r.Context(), bson.M{})
+	var user ConfirmUser
+	err := db.Collection("confirm_users").FindOne(r.Context(), bson.M{"email": email}).Decode(&user)
+	if err != nil {
+		sendErrorMessage(w, "confirm", err, "Error finding user by email. Try again.")
+		return
+	}
+	newUser := User{
+		User_id:  strconv.FormatInt(userID+1, 10),
+		Email:    user.Email,
+		Password: user.Password,
+	}
 	_, err = db.Collection("users").InsertOne(r.Context(), newUser)
 	if err != nil {
-		sendErrorMessage(w, "createUser", err, "Error creating user. Try again.")
+		sendErrorMessage(w, "confirm", err, "Error adding user. Try again.")
 		return
 	}
 	newUserCollection := Collections{
@@ -265,17 +233,12 @@ func createUser(w http.ResponseWriter, r *http.Request) {
 	}
 	_, err = db.Collection("collections").InsertOne(r.Context(), newUserCollection)
 	if err != nil {
-		sendErrorMessage(w, "createUser", err, "Error creating users collection. Try again.")
+		sendErrorMessage(w, "confirm", err, "Error creating users collection. Try again.")
 		return
 	}
 	questionSize, err := db.Collection("questions").CountDocuments(r.Context(), bson.M{})
 	if err != nil {
-		errorMessage := "Error getting collection size"
-		logger.WithFields(logrus.Fields{
-			"action": "createUser",
-			"status": "error",
-			"error":  err.Error(),
-		}).Error(errorMessage)
+		sendErrorMessage(w, "confirm", err, "Error getting collection size. Try to relod page.")
 		return
 	}
 	randomNumbers := make([]int, 5)
@@ -284,12 +247,7 @@ func createUser(w http.ResponseWriter, r *http.Request) {
 	}
 	cursor, err := db.Collection("questions").Find(r.Context(), bson.M{"question_id": bson.M{"$in": randomNumbers}})
 	if err != nil {
-		errorMessage := "User has not players in collection."
-		logger.WithFields(logrus.Fields{
-			"action": "createUser",
-			"status": "error",
-			"error":  err.Error(),
-		}).Error(errorMessage)
+		sendErrorMessage(w, "confirm", err, "Error adding questions to user. Try to relod page.")
 		return
 	}
 	var questions []Questions
@@ -298,12 +256,7 @@ func createUser(w http.ResponseWriter, r *http.Request) {
 		var question Questions
 		err := cursor.Decode(&question)
 		if err != nil {
-			errorMessage := "Error decoding file"
-			logger.WithFields(logrus.Fields{
-				"action": "updateCollectionPeriodically",
-				"status": "error",
-				"error":  err.Error(),
-			}).Error(errorMessage)
+			sendErrorMessage(w, "confirm", err, "Error decoding file. Try to relod page.")
 			return
 		}
 		questions = append(questions, question)
@@ -315,7 +268,7 @@ func createUser(w http.ResponseWriter, r *http.Request) {
 	}
 	_, err = db.Collection("user_questions").InsertOne(r.Context(), newUserQuestions)
 	if err != nil {
-		sendErrorMessage(w, "createUser", err, "Error creating users questions. Try again.")
+		sendErrorMessage(w, "confirm", err, "Error creating users questions. Try again.")
 		return
 	}
 	newUserTeam := Teams{
@@ -324,10 +277,15 @@ func createUser(w http.ResponseWriter, r *http.Request) {
 	}
 	_, err = db.Collection("teams").InsertOne(r.Context(), newUserTeam)
 	if err != nil {
-		sendErrorMessage(w, "createUser", err, "Error creating users team. Try again.")
+		sendErrorMessage(w, "confirm", err, "Error creating users team. Try again.")
 		return
 	}
-	sendSuccessMessage(w, "createUser", "User created successfully. Log in to the account", "")
+	_, err = db.Collection("confirm_users").DeleteOne(r.Context(), bson.M{ "email": email})
+	if err != nil {
+		sendErrorMessage(w, "confirm", err, "Error creating users team. Try again.")
+		return
+	}
+	sendSuccessMessage(w, "confirm", "Email confirmed successfully. You can log in", "")
 }
 func login(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
@@ -423,9 +381,9 @@ func market(w http.ResponseWriter, r *http.Request) {
 		}
 		deals = append(deals, deal)
 	}
-	answer := []interface{} {
-			tokenString, deals,
-		}
+	answer := []interface{}{
+		tokenString, deals,
+	}
 	logger.WithFields(logrus.Fields{
 		"action": "market",
 		"status": "success",
@@ -542,12 +500,10 @@ func marketCards(w http.ResponseWriter, r *http.Request) {
 		}).Info("Data was sorted by " + sortBy + " and filtered by " + positionFilter)
 	}
 }
-
-// НАДО ИСПРАВИТЬ
 func cardToCollection(w http.ResponseWriter, r *http.Request) {
 	userID := r.URL.Query().Get("user_id")
 	cardID := r.URL.Query().Get("card_id")
-	card_id, err := strconv.Atoi(cardID) 
+	card_id, err := strconv.Atoi(cardID)
 	if err != nil {
 		sendErrorMessage(w, "cardToCollection", err, "Error converting card_id to int. Try again.")
 		return
@@ -616,7 +572,7 @@ func collection(w http.ResponseWriter, r *http.Request) {
 			"error":  err.Error(),
 		}).Error(errorMessage)
 	}
-	answer := []interface{} {
+	answer := []interface{}{
 		tokenString, collection,
 	}
 	logger.WithFields(logrus.Fields{
@@ -683,25 +639,135 @@ func admin(w http.ResponseWriter, r *http.Request) {
 		"action": "admin",
 		"status": "success",
 	}).Info("User on the admin page")
+	var users []User = getAllUsers(r)
+	tmpl.ExecuteTemplate(w, "admin.html", users)
+}
+func deleteUser(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodDelete {
+		http.Error(w, "Only DELETE requests are allowed", http.StatusMethodNotAllowed)
+		return
+	}
+	userID := r.URL.Query().Get("id")
+	_, err := db.Collection("users").DeleteOne(r.Context(), bson.M{"user_id": userID})
+	if err != nil {
+		sendErrorMessage(w, "deleteUser", err, "Error deleting user. Try again.")
+		return
+	}
+	_, err = db.Collection("collections").DeleteOne(r.Context(), bson.M{"user_id": userID})
+	if err != nil {
+		sendErrorMessage(w, "deleteUser", err, "Error deleting users collection. Try again.")
+		return
+	}
+	_, err = db.Collection("user_questions").DeleteOne(r.Context(), bson.M{"user_id": userID})
+	if err != nil {
+		sendErrorMessage(w, "deleteUser", err, "Error deleting users questions collection. Try again.")
+		return
+	}
+	_, err = db.Collection("teams").DeleteOne(r.Context(), bson.M{"user_id": userID})
+	if err != nil {
+		sendErrorMessage(w, "deleteUser", err, "Error deleting users team. Try again.")
+		return
+	}
+	_, err = db.Collection("cards_in_deal").DeleteMany(r.Context(), bson.M{"user_id": userID})
+	if err != nil {
+		sendErrorMessage(w, "deleteUser", err, "Error deleting users cards in deal. Try again.")
+		return
+	}
+	sendSuccessMessage(w, "deleteUser", "User was deleted.", "")
+}
+func getAllUsers(r *http.Request) []User {
 	var users []User
 	cursor, err := db.Collection("users").Find(r.Context(), bson.M{})
 	if err != nil {
 		logger.WithFields(logrus.Fields{
-			"action": "admin",
+			"action": "getAllUsers",
 			"status": "error",
 			"error":  err.Error(),
 		}).Error("Error fetching users")
 	}
 	if err := cursor.All(r.Context(), &users); err != nil {
 		logger.WithFields(logrus.Fields{
-			"action": "admin",
+			"action": "getAllUsers",
 			"status": "error",
 			"error":  err.Error(),
 		}).Error("Error decoding users")
 	}
-	tmpl.ExecuteTemplate(w, "admin.html", users)
+	return users
 }
-
+func addCard(w http.ResponseWriter, r *http.Request) {
+	type newCard struct {
+		Name        string `json:"name"`
+		Nationality string `json:"nationality"`
+		Club        string `json:"club"`
+		Position    string `json:"position"`
+	}
+	var data newCard
+	err := json.NewDecoder(r.Body).Decode(&data)
+	if err != nil {
+		sendErrorMessage(w, "addCard", err, "Error decoding new card data. Try again.")
+		return
+	}
+	if data.Position != "Forward" && data.Position != "Midfielder" && data.Position != "Defender" && data.Position != "Manager" && data.Position != "Goalkeeper" {
+		sendErrorMessage(w, "addCard", errors.New("invalid input"), "Invalid position. Position must be Forward, Midfielder, Defender, Manager or Goalkeeper.")
+		return
+	}
+	var card Card
+	card.Club = data.Club
+	card.Name = data.Name
+	card.Nationality = data.Nationality
+	card.Position = data.Position
+	id, err := db.Collection("cards").CountDocuments(r.Context(), bson.M{})
+	if err != nil {
+		sendErrorMessage(w, "addCard", err, "Error get size of cards collection. Try to reload page.")
+		return
+	}
+	card.Card_id = int(id + 1)
+	_, err = db.Collection("cards").InsertOne(r.Context(), card)
+	if err != nil {
+		sendErrorMessage(w, "addCard", err, "Error add new card to collection. Try again.")
+		return
+	}
+	sendSuccessMessage(w, "addCard", "New card added to collection successfully!", "")
+}
+func addQuestion(w http.ResponseWriter, r *http.Request) {
+	type newQuestion struct {
+		Question   string `bson:"question"`
+		OptionA    string `bson:"option a"`
+		OptionB    string `bson:"option b"`
+		OptionC    string `bson:"option c"`
+		OptionD    string `bson:"option d"`
+		RightOp    string `bson:"right option"`
+	}
+	var data newQuestion
+	err := json.NewDecoder(r.Body).Decode(&data)
+	if err != nil {
+		sendErrorMessage(w, "addQuestion", err, "Error decoding new question data. Try again.")
+		return
+	}
+	if data.RightOp != "a" && data.RightOp != "b" && data.RightOp != "c" && data.RightOp != "d" {
+		sendErrorMessage(w, "addQuestion", errors.New("invalid input"), "Invalid position. Right option must be 'a', 'b', 'c' or 'd'.")
+		return
+	}
+	var question Questions
+	question.Question = data.Question
+	question.OptionA = data.OptionA
+	question.OptionB = data.OptionB
+	question.OptionC = data.OptionC
+	question.OptionD = data.OptionD
+	question.RightOp = data.RightOp
+	id, err := db.Collection("questions").CountDocuments(r.Context(), bson.M{})
+	if err != nil {
+		sendErrorMessage(w, "addQuestion", err, "Error get size of questions collection. Try to reload page.")
+		return
+	}
+	question.QuestionID = int(id + 1)
+	_, err = db.Collection("questions").InsertOne(r.Context(), question)
+	if err != nil {
+		sendErrorMessage(w, "addQuestion", err, "Error add new question to collection. Try again.")
+		return
+	}
+	sendSuccessMessage(w, "addQuestion", "New question added to collection successfully!", "")
+}
 // /////////////////////////////////////////////////////////////////// Daily questions page
 func dailyQuestions(w http.ResponseWriter, r *http.Request) {
 	tmpl, err := template.ParseFiles("daily_card.html")
@@ -745,7 +811,7 @@ func dailyQuestions(w http.ResponseWriter, r *http.Request) {
 			"error":  err.Error(),
 		}).Error(errorMessage)
 	}
-	answer := []interface{} {
+	answer := []interface{}{
 		tokenString, questions,
 	}
 	logger.WithFields(logrus.Fields{
@@ -757,6 +823,7 @@ func dailyQuestions(w http.ResponseWriter, r *http.Request) {
 func giveCard(w http.ResponseWriter, r *http.Request) {
 	user_id := r.URL.Query().Get("user_id")
 	answers := r.URL.Query().Get("answers")
+	token := r.URL.Query().Get("token")
 	if answers == "5" {
 		cardSize, err := db.Collection("cards").CountDocuments(r.Context(), bson.M{})
 		if err != nil {
@@ -780,14 +847,14 @@ func giveCard(w http.ResponseWriter, r *http.Request) {
 			sendErrorMessage(w, "giveCard", err, "Failed to submit the answers. Try submitting the answers again.")
 			return
 		}
-		sendSuccessMessage(w, "giveCard", "The card "+card.Name+" has been added to your collection successfully.", "")
+		sendSuccessMessage(w, "giveCard", "The card "+card.Name+" has been added to your collection successfully.", token)
 	} else {
 		_, err := db.Collection("user_questions").UpdateOne(r.Context(), bson.M{"user_id": user_id}, bson.M{"$set": bson.M{"submit": true}})
 		if err != nil {
 			sendErrorMessage(w, "giveCard", err, "Failed to submit the answers. Try submitting the answers again.")
 			return
 		}
-		sendSuccessMessage(w, "giveCard", "The answers submitted. Good luck getting your new card tomorrow!", "")
+		sendSuccessMessage(w, "giveCard", "The answers submitted. Good luck getting your new card tomorrow!", token)
 	}
 }
 func updateCollectionPeriodically(ctx context.Context) {
@@ -866,7 +933,7 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 			"action": "homePage",
 			"status": "error",
 			"error":  err.Error(),
-		}).Error("Error parse file 'daily_card.html'")
+		}).Error("Error parse file 'homepage.html'")
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -913,6 +980,31 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 	answer = append(answer, tokenString, userID, email, password)
 	tmpl.ExecuteTemplate(w, "homepage.html", answer)
 }
+func updateUser(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPut {
+		http.Error(w, "Only PUT requests are allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	var updatedUser User
+	decoder := json.NewDecoder(r.Body)
+	if err := decoder.Decode(&updatedUser); err != nil {
+		http.Error(w, "Invalid JSON format", http.StatusBadRequest)
+		return
+	}
+	objID, _ := primitive.ObjectIDFromHex(updatedUser.ID)
+	result, err := db.Collection("users").UpdateOne(r.Context(), bson.M{"_id": objID}, bson.M{"$set": updatedUser})
+	if err != nil {
+		log.Fatal(err)
+		http.Error(w, "Error updating user", http.StatusInternalServerError)
+		return
+	}
+
+	respondWithJSON(w, http.StatusOK, map[string]interface{}{
+		"status":  "success",
+		"message": fmt.Sprintf("User updated: %d document(s) modified", result.ModifiedCount),
+	})
+}
 // Error Handling with log messages
 func sendErrorMessage(w http.ResponseWriter, action string, err error, message string) {
 	logger.WithFields(logrus.Fields{
@@ -931,6 +1023,7 @@ func sendSuccessMessage(w http.ResponseWriter, action string, message string, to
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]string{"success": message, "token": token})
 }
+
 // JWT token
 func generateToken(user *User) (string, error) {
 	token := jwt.New(jwt.SigningMethodHS256)
@@ -973,6 +1066,7 @@ func authenticate(next http.Handler) http.Handler {
 		next.ServeHTTP(w, r)
 	})
 }
+//
 func respondWithJSON(w http.ResponseWriter, statusCode int, data interface{}) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(statusCode)
@@ -988,18 +1082,21 @@ func handleRequests() {
 	//  CRUD
 	rtr.HandleFunc("/getUserByID", getUserByID).Methods("GET")
 	rtr.HandleFunc("/updateUser", updateUser).Methods("PUT", "POST")
-	rtr.HandleFunc("/deleteUser", deleteUser).Methods("DELETE")
-	rtr.HandleFunc("/getAllUsers", getAllUsers).Methods("GET")
 	// Registration page
 	rtr.HandleFunc("/createUser", createUser).Methods("POST")
 	rtr.HandleFunc("/login", login).Methods("POST")
 	rtr.HandleFunc("/", registerPage).Methods("GET")
+	rtr.HandleFunc("/confirmPage", confirmPage)
+	rtr.HandleFunc("/confirm", confirm)
 	// Market page
 	rtr.Handle("/market", authenticate(http.HandlerFunc(market))).Methods("GET")
 	rtr.HandleFunc("/marketCards", marketCards).Methods("GET")
 	rtr.HandleFunc("/cardToCollection", cardToCollection).Methods("POST")
 	// Admin page
 	rtr.Handle("/admin", authenticate(http.HandlerFunc(admin)))
+	rtr.HandleFunc("/addCard", addCard)
+	rtr.HandleFunc("/addQuestion", addQuestion)
+	rtr.HandleFunc("/deleteUser", deleteUser).Methods("DELETE")
 	// Collection page
 	rtr.Handle("/collection", authenticate(http.HandlerFunc(collection))).Methods("GET")
 	rtr.HandleFunc("/saveTeam", saveTeam)
@@ -1008,8 +1105,9 @@ func handleRequests() {
 	rtr.Handle("/dailyQuestions", authenticate(http.HandlerFunc(dailyQuestions)))
 	rtr.HandleFunc("/giveCard", giveCard)
 	// Home page
-	rtr.Handle("/homePage", authenticate(http.HandlerFunc(homePage)))
+	rtr.Handle("/homePage", authenticate(http.HandlerFunc(homePage))).Methods("GET")
 	//
+	http.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("./css"))))
 	http.Handle("/script/", http.StripPrefix("/script/", http.FileServer(http.Dir("./script"))))
 	http.Handle("/images/", http.StripPrefix("/images/", http.FileServer(http.Dir("./images"))))
 	rtr.HandleFunc("/", handler)

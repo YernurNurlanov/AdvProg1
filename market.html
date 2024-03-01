@@ -4,304 +4,59 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Football Manager</title>
-	<style>
-		body {
-			font-family: Arial, sans-serif;
-			background-image: url('https://wallpapercave.com/wp/wp10054836.jpg');
-			background-size: cover;
-			background-position: center;
-			background-attachment: fixed;
-			margin: 0;
-			padding: 20px;
-			padding-top: 0px;
-		}
-
-		header {
-			text-align: center;
-			width: 100%;
-			top: 0;
-			left: 0;
-			z-index: 1000;
-			color: #fff;
-			text-shadow: 1px 1px 8px rgba(0,0,0,0.7);
-		}
-
-		h2 {
-			text-align: center;
-			width: 100%;
-			top: 0;
-			left: 0;
-			z-index: 1000;
-			color: #fff;
-			text-shadow: 1px 1px 8px rgba(0,0,0,0.7);
-		}
-
-		.card-container {
-			display: flex;
-			flex-wrap: wrap;
-			justify-content: space-around;
-		}
-
-		.card {
-			background-color: gold;
-			border: 1px solid #ddd;
-			margin: 10px;
-			padding: 10px;
-			width: 100px;
-		}
-
-		#filter-sort {
-			margin-bottom: 20px;
-		}
-
-		#pagination {
-			margin-top: 20px;
-			text-align: center;
-		}
-
-		.page-link {
-			margin: 0 5px;
-			cursor: pointer;
-		}
-
-		.page-link.active {
-			font-weight: bold;
-		}
-	</style>
+	<link rel="stylesheet" type="text/css" href="/css/market.css">
 </head>
 <body>
 	<header>
 			<h1>Market</h1>
 	</header>
-	<button onclick="homePage()">Home page</button>
-	<div id="filter-sort">
-			<!-- Sorting Options -->
-			<form id="sortForm">
-				<select id="sortCards" name="sortBy">
-					<option value="">Select</option>
-					<option value="name">Name</option>
-					<option value="card_id">Card_id</option>
-				</select>
-				<input type="submit" value="Submit">
-			</form>	
-			<!-- Filtering Options -->
-			<form id="filterForm">
-				<select id="positionFilter" name="filter">
-						<option value="">Select a position</option>
-						<option value="Forward"> Forward</option>
-						<option value="Midfielder"> Midfielder</option>
-						<option value="Defender"> Defender</option>
-						<option value="Goalkeeper"> Goalkeeper</option>
-						<option value="Manager"> Manager</option>
-				</select>
-				<input type="submit" value="Submit">
-		</form>		
-	</div>
-	<!-- Market Cards -->
-	<div id="marketCards" class="card-container">
-	</div>
-	<!-- Pagination -->
-	<div class="pagination">
-			<button id="prevPage">Prev</button>
-			<span id="currentPage">1</span>
-			<button id="nextPage">Next</button>
-	</div>
-	<h2>My cards in deals</h2>
-	<div id="myCards" class="card-container">
-		{{ range index . 1 }}
-    	<div class="card">
-        <p>Name: {{ .Card_id.Name }}</p>
-        <p>Nationality: {{ .Card_id.Nationality }}</p>
-        <p>Club: {{ .Card_id.Club }}</p>
-        <p>Position: {{ .Card_id.Position }}</p>
-        <button onclick="sendCardData('{{ .Card_id.Card_id }}', '{{ .User_id }}')">Move into collection</button>
-    	</div>
-		{{ end }}
-	</div>
-	<script>
-		function homePage() {
-			window.location.href = "/homePage?token={{ index . 0 }}";
-		}
-		// move card to collection
-		function sendCardData(cardId,userId) {
-			fetch(`/CardToCollection?card_id=${cardId}&user_id=${userId}`, {
-				method: 'POST'
-			})
-			.then(response => response.json())
-			.then(data => {
-					if(data.error) { alert(data.error); }
-					else { placePlayersInZones(data); }
-			})
-			.catch(error => {
-					console.error('There was a problem with the fetch operation:', error);
-			});
-		}
-		// display cards
-		let currentPage = 1
-		var page = document.getElementById("currentPage")
-		let filter = document.getElementById('positionFilter').value
-		let sortBy = document.getElementById('sortCards').value
-		document.getElementById('prevPage').disabled = currentPage === 1;
-		document.addEventListener('DOMContentLoaded', fetchData);
-		function fetchData() {
-			//////////////////////////////////////////// MUST BE CHANGED
-				fetch(`/marketCards?page=${currentPage}&filter=${encodeURIComponent(filter)}&sort=${encodeURIComponent(`card_id.${sortBy}`)}`)
-						.then(response => response.json())
-						.then(data => {
-								if(data.error) { alert(data.error); }
-								else { displayData(data); }
-						})
-						.catch(error => {
-								console.error('There was a problem with the fetch operation:', error);
-						});
-		}
-		function displayData(data) {
-				const dataContainer = document.getElementById('marketCards');
-				
-				data.forEach(item => {
-
-							const user_id = document.createElement('p');
-							user_id.textContent = `User_id: ${item["user_id"]}`;
-
-							const div = document.createElement('div');
-							div.classList.add('card');
-
-							const card_id = document.createElement('p');
-							card_id.textContent = `Card_id: ${item["card_id"]["card_id"]}`;
-
-							const name = document.createElement('p');
-							name.textContent = `Name: ${item["card_id"]["name"]}`;
-
-							const nationality = document.createElement('p');
-							nationality.textContent = `Nationality: ${item["card_id"]["nationality"]}`;
-
-							const club = document.createElement('p');
-							club.textContent = `Club: ${item["card_id"]["club"]}`;
-
-							const position = document.createElement('p');
-							position.textContent = `Position: ${item["card_id"]["position"]}`;
-							
-							div.appendChild(user_id);
-							div.appendChild(card_id);
-							div.appendChild(name);
-							div.appendChild(club);
-							div.appendChild(nationality);
-							div.appendChild(position);
-							dataContainer.appendChild(div);
-				});
-		}
-		// filtering
-		document.getElementById("filterForm").addEventListener("submit", function(event){
-			event.preventDefault();
-			filter = document.getElementById('positionFilter').value;
-			if (filter) {
-				currentPage = 1
-				page.innerHTML = currentPage;
-				document.getElementById('nextPage').disabled = false;
-				document.getElementById('prevPage').disabled = currentPage === 1;
-				fetch(`/marketCards?page=${currentPage}&filter=${encodeURIComponent(filter)}&sort=${encodeURIComponent(`card_id.${sortBy}`)}`, {
-            method: 'GET',
-        })
-        .then(response => response.json())
-        .then(data => {
-						if(data.error) { alert(data.error); }
-						else { 
-							var myDiv = document.getElementById('marketCards');
-							myDiv.innerHTML = '';
-							displayData(data); 
-						}
-				})
-				.catch(error => {
-						console.error('There was a problem with the fetch operation:', error);
-				});
-      } else {
-            alert('Please select a position before submitting.');
-        }
-		})
-		// sorting
-		document.getElementById("sortForm").addEventListener("submit", function(event){
-			event.preventDefault();
-			sortBy = document.getElementById('sortCards').value;
-			filter = document.getElementById('positionFilter').value;
-			if (sortBy) {
-				currentPage = 1
-				page.innerHTML = currentPage;
-				document.getElementById('nextPage').disabled = false;
-				document.getElementById('prevPage').disabled = currentPage === 1;
-				fetch(`/marketCards?page=${currentPage}&filter=${encodeURIComponent(filter)}&sort=${encodeURIComponent(`card_id.${sortBy}`)}`, {
-            method: 'GET',
-        })
-        .then(response => response.json())
-        .then(data => {
-						if(data.error) { alert(data.error); }
-						else { 
-							var myDiv = document.getElementById('marketCards');
-							myDiv.innerHTML = '';
-							displayData(data); 
-						}
-				})
-				.catch(error => {
-						console.error('There was a problem with the fetch operation:', error);
-				});
-      } else {
-            alert('Please select a position before submitting.');
-        }
-		})
-		// pagination
-		document.getElementById("nextPage").addEventListener("click", function(){
-			currentPage += 1
-			page.innerHTML = currentPage;
-			fetch(`/marketCards?page=${currentPage}&filter=${encodeURIComponent(filter)}&sort=${encodeURIComponent(`card_id.${sortBy}`)}`, {
-        method: 'GET',
-      })
-				.then(response => response.json())
-				.then(data => {
-						if(data.error) { alert(data.error); }
-						else { 
-							var myDiv = document.getElementById('marketCards');
-							myDiv.innerHTML = '';
-							displayData(data); 
-						}
-				})
-				.catch(error => {
-						console.error('There was a problem with the fetch operation:', error);
-				});
-			document.getElementById('prevPage').disabled = currentPage === 1;
-			if (currentPage != 1) {
-				document.getElementById('prevPage').disabled = false;
-			}
-			document.getElementById('nextPage').disabled = currentPage === 8;
-			if (currentPage != 8) {
-				document.getElementById('nextPage').disabled = false;
-			}
-		})
-		document.getElementById("prevPage").addEventListener("click", function(){
-			currentPage -= 1;
-			page.innerHTML = currentPage;
-			fetch(`/marketCards?page=${currentPage}&filter=${encodeURIComponent(filter)}&sort=${encodeURIComponent(`card_id.${sortBy}`)}`, {
-        method: 'GET',
-      })
-				.then(response => response.json())
-				.then(data => {
-						if(data.error) { alert(data.error); }
-						else { 
-							var myDiv = document.getElementById('marketCards');
-							myDiv.innerHTML = '';
-							displayData(data); 
-						}
-				})
-				.catch(error => {
-						console.error('There was a problem with the fetch operation:', error);
-				});
-			document.getElementById('prevPage').disabled = currentPage === 1;
-			if (currentPage != 1) {
-				document.getElementById('prevPage').disabled = false;
-			}
-			document.getElementById('nextPage').disabled = currentPage === 8;
-			if (currentPage != 8) {
-				document.getElementById('nextPage').disabled = false;
-			}
-		})
-	</script>
+	<main>
+		<button onclick="homePage('{{ index . 0 }}')">Home page</button>
+		<div id="filter-sort">
+				<!-- Sorting Options -->
+				<form id="sortForm">
+					<select id="sortCards" name="sortBy">
+						<option value="">Select</option>
+						<option value="name">Name</option>
+						<option value="card_id">Card_id</option>
+					</select>
+					<input type="submit" value="Submit">
+				</form>	
+				<!-- Filtering Options -->
+				<form id="filterForm">
+					<select id="positionFilter" name="filter">
+							<option value="">Select a position</option>
+							<option value="Forward"> Forward</option>
+							<option value="Midfielder"> Midfielder</option>
+							<option value="Defender"> Defender</option>
+							<option value="Goalkeeper"> Goalkeeper</option>
+							<option value="Manager"> Manager</option>
+					</select>
+					<input type="submit" value="Submit">
+			</form>		
+		</div>
+		<!-- Market Cards -->
+		<div id="marketCards" class="card-container">
+		</div>
+		<!-- Pagination -->
+		<div class="pagination">
+				<button id="prevPage">Prev</button>
+				<span id="currentPage">1</span>
+				<button id="nextPage">Next</button>
+		</div>
+		<h2>My cards in deals</h2>
+		<div id="myCards" class="card-container">
+			{{ range index . 1 }}
+				<div class="card">
+					<p>Name: {{ .Card_id.Name }}</p>
+					<p>Nationality: {{ .Card_id.Nationality }}</p>
+					<p>Club: {{ .Card_id.Club }}</p>
+					<p>Position: {{ .Card_id.Position }}</p>
+					<button onclick="sendCardData('{{ .Card_id.Card_id }}', '{{ .User_id }}')">Move into collection</button>
+				</div>
+			{{ end }}
+		</div>
+	</main>
+	<script src="/script/market.js"></script>
 </body>
 </html>

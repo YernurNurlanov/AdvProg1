@@ -1,0 +1,32 @@
+body {
+	font-family: Arial, sans-serif;
+	background-image: url('https://wallpapercave.com/wp/wp10054836.jpg');
+	background-size: cover;
+	background-position: center;
+	background-attachment: fixed;
+	margin: 0;
+	padding: 20px;
+	padding-top: 0px;
+}
+header {
+	text-align: center;
+	width: 100%;
+	margin: 20px;
+	top: 0;
+	left: 0;
+	z-index: 1000;
+	color: #fff;
+	text-shadow: 1px 1px 8px rgba(0,0,0,0.7);
+}
+.card {
+	padding: 4px;
+	margin-bottom: 20px;
+	background-color: #fff;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+}
+img {
+	display: block;
+	max-width: 100%;
+	height: auto;
+}

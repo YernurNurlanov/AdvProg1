@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Football Manager</title>
+		<link rel="stylesheet" type="text/css" href="/css/collection.css">
+</head>
+<body>
+	<header>
+			<h1>Collection</h1>
+	</header>
+	<main>
+		<div data-email="{{ . }}" class="card-collection">
+		</div>
+	</main>
+	<script>
+		var divElement = document.querySelector('.card-collection');
+		var email = divElement.getAttribute('data-email');
+		document.addEventListener('DOMContentLoaded', confirm);
+		function confirm() {
+			fetch(`/confirm?email=${email}`,{
+				method: "POST"
+			})
+			.then(response => response.json())
+			.then(data => {
+					if(data.error) { alert(data.error); }
+					else { alert(data.success);
+						window.location.href = "/"; }
+			})
+			.catch(error => {
+					console.error('There was a problem with the fetch operation:', error);
+			});
+		}
+	</script>
+</body>
+</html>

@@ -5,72 +5,13 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Football Manager</title>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-	<style>
-		body {
-			font-family: Arial, sans-serif;
-			background-image: url('https://wallpapercave.com/wp/wp10054836.jpg');
-			background-size: cover;
-			background-position: center;
-			background-attachment: fixed;
-			margin: 0;
-			padding: 20px;
-			padding-top: 0px;
-		}
-		header {
-			text-align: center;
-		}
-		.container {
-			min-width: 300px;
-			width: 50%;
-			background-color: #fff;
-			border-radius: 8px;
-			overflow: hidden;
-			box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-		}
-		.form-container {
-			display: none;
-			min-width: 300px;
-			width: 90%;
-			margin: 0px auto;
-			padding: 20px;
-			background: #fff;
-			border-radius: 8px;
-		}
-		.tabs {
-					display: flex;
-					justify-content: space-around;
-					padding: 10px;
-			}
-		.tab-btn {
-					cursor: pointer;
-					color: inherit;
-					font-size: 16px;
-					padding: 8px;
-					outline: none;
-					border-radius:5px;
-					background-color: azure;
-					margin: 5px;
-					border-color: azure;
-			}
-		
-		.submit-btn {
-			padding: 10px 15px;
-			border: none;
-			border-radius: 4px;
-			background-color: #5cb85c;
-			color: white;
-			cursor: pointer;
-		}
-		
-		.submit-btn:hover {
-			background-color: #4cae4c;
-		}
-	</style>
+	<link rel="stylesheet" type="text/css" href="/css/admin.css">
 </head>
 <body>
 	<header>
 		<h1>Administration panel</h1>
 	</header>
+	<main>
 		<div class="container">
 			<div class="tabs">
 						<button class="tab-btn" onclick="showTab('addCards')">Add cards</button>
@@ -78,88 +19,69 @@
 						<button class="tab-btn" onclick="showTab('deleteUser')">Delete user</button>
 			</div>
 			<div id="addCards" class="form-container">
-					<form onsubmit="addCards(event)">
-							<div class="form-group">
-									<label for="login1">Login</label>
-									<input type="text" id="login1" name="login" required>
-							</div>
-							<div class="form-group">
-									<label for="password1">Password</label>
-									<input type="password" id="password1" name="password" required>
-							</div>
-							<button type="submit" class="submit-btn">Register</button>
-					</form>
+				<form onsubmit="addCards(event)">
+					<div class="form-group">
+							<label for="name">Name</label>
+							<input type="text" id="name" name="name" required>
+					</div>
+					<div class="form-group">
+						<label for="nationality">Nationality</label>
+						<input type="text" id="nationality" name="nationality" required>
+					</div>
+					<div class="form-group">
+						<label for="club">Club</label>
+						<input type="text" id="club" name="club" required>
+					</div>
+					<div class="form-group">
+						<label for="position">Position</label>
+						<input type="text" id="position" name="position" required>
+					</div>
+					<button type="submit" class="submit-btn">Add card</button>
+			</form>
 			</div>
 			<div id="addQuestions" class="form-container">
 				<form onsubmit="addQuestions(event)">
-						<div class="form-group">
-								<label for="login2">Login</label>
-								<input type="text" id="login2" name="login" required>
-						</div>
-						<div class="form-group">
-								<label for="password2">Password</label>
-								<input type="password" id="password2" name="password" required>
-						</div>
-						<button type="submit" class="submit-btn">Log in</button>
-				</form>
+					<div class="form-group">
+							<label for="question">Question</label>
+							<input type="text" id="question" name="question" required>
+					</div>
+					<div class="form-group">
+						<label for="option1">Option A</label>
+						<input type="text" id="option1" name="option1" required>
+					</div>
+					<div class="form-group">
+						<label for="option2">Option B</label>
+						<input type="text" id="option2" name="option2" required>
+					</div>
+					<div class="form-group">
+						<label for="option3">Option C</label>
+						<input type="text" id="option3" name="option3" required>
+					</div>
+					<div class="form-group">
+						<label for="option4">Option D</label>
+						<input type="text" id="option4" name="option4" required>
+					</div>
+					<div class="form-group">
+							<label for="rightOp">Right option</label>
+							<input type="password" id="rightOp" name="rightOp" required>
+					</div>
+					<button type="submit" class="submit-btn">Add Question</button>
+			</form>
 			</div>
 			<div id="deleteUser" class="form-container">
 				<form onsubmit="deleteUser(event)">
 					<p>Choose one user that you want to delete.</p>
 					<div class="users">
 					{{ range . }}
-						<label><input type="checkbox" class="user-checkbox" value="{{ .User_id }}"> {{ .ID }}, {{ .User_id }}, {{ .Login }}, {{ .Password }}</label><br>
+						<label><input type="checkbox" class="user-checkbox" value="{{ .User_id }}"> {{ .ID }}, {{ .User_id }}, {{ .Email }}</label><br>
 					{{ end }}
 					</div>
-						<button type="submit" class="submit-btn">Delete</button>
+					<button type="submit" class="submit-btn">Delete</button>
 				</form>
 			</div>
 			<p id="message"></p>
 		</div>
-		<script>
-			const userCheckboxes = document.querySelectorAll('.user-checkbox');
-			userCheckboxes.forEach(function(checkbox) {
-				checkbox.addEventListener('change', function() {
-					userCheckboxes.forEach(function(cb) {
-						if (cb !== checkbox) {
-								cb.checked = false;
-						}
-					});
-				});
-			});
-			function deleteUser(event) {
-        event.preventDefault();
-        const selectedUserId = document.querySelector('.user-checkbox:checked').value;
-        fetch(`/deleteUser?id=${selectedUserId}`, {
-					method: 'DELETE'
-        })
-        .then(response => {
-					if (response.ok) {
-							return response.json();
-					} else {
-							throw new Error('Network response was not ok.');
-					}
-				}).then(data => {
-					if(data.error) {
-						alert(data.error);
-					}
-					else if (data.success){
-						alert(data.success);
-					}
-				}).catch(error => {
-					console.error('There was a problem with the fetch operation:', error);
-				});
-    	}
-			function showTab(tabId) {
-			document.querySelectorAll('.form-container').forEach(function(tab) {
-					tab.style.display = 'none';
-			});
-			document.querySelectorAll('.form-container').forEach(function(btn) {
-					btn.classList.remove('active');
-			});
-			document.getElementById(tabId).style.display = 'block';
-			document.querySelector(`[onclick="showTab('${tabId}')"]`).classList.add('active');
-		}
-		</script>
-	</body>
+	</main>
+	<script src="/script/admin.js"></script>
+</body>
 </html>

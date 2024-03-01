@@ -1,0 +1,75 @@
+body {
+	font-family: Arial, sans-serif;
+	background-image: url('https://wallpapercave.com/wp/wp10054836.jpg');
+	background-size: cover;
+	background-position: center;
+	background-attachment: fixed;
+	margin: 0;
+	padding: 20px;
+	padding-top: 0px;
+}
+
+header {
+	text-align: center;
+	width: 100%;
+	top: 0;
+	left: 0;
+	z-index: 1000;
+	color: #fff;
+	text-shadow: 1px 1px 8px rgba(0,0,0,0.7);
+}
+
+.team-management, .card-collection {
+	background: white;
+	border-radius: 8px;
+	box-shadow: 0 2px 4px rgba(0,0,0,.1);
+	padding: 20px;
+}
+
+.formation .line, .card-collection {
+	display: flex;
+	justify-content: space-around;
+	margin-bottom: 20px;
+}
+
+#manager {
+	margin-left: auto;
+}
+
+.drop-zone {
+	width: 120px;
+	height: 180px;
+	border: 2px dashed #ccc;
+	border-radius: 8px;
+	background-color: #f9f9f9;
+}
+
+.card {
+	display: inline-block;
+	width: 120px;
+	height: 180px;
+	background: #007bff;
+	color: white;
+	text-align: center;
+	line-height: 180px;
+	border-radius: 8px;
+	margin: 0 10px 10px 0;
+	cursor: grab;
+	overflow: auto;
+	line-height: 1.2;
+	white-space: normal;
+}
+
+.layout-container {
+	display: flex;
+	justify-content: space-between;
+}
+
+.team-management {
+	flex: 1; 
+	margin-right: 20px; 
+}
+
+.card-collection {
+	flex: 1;
+}

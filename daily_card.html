@@ -4,76 +4,16 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Football Manager</title>
-	<style>
-		body {
-			font-family: Arial, sans-serif;
-			background-image: url('https://wallpapercave.com/wp/wp10054836.jpg');
-			background-size: cover;
-			background-position: center;
-			background-attachment: fixed;
-			margin: 0;
-			padding: 20px;
-			padding-top: 0px;
-		}
-  
-		header {
-			text-align: center;
-			width: 100%;
-			top: 0;
-			left: 0;
-			z-index: 1000;
-			color: #fff;
-			text-shadow: 1px 1px 8px rgba(0,0,0,0.7);
-		}
-		
-		.quiz-container {
-			width: 80%;
-			max-width: 600px;
-			margin: 60px auto;
-			padding: 20px;
-			background: rgba(255, 255, 255, 0.8);
-			border-radius: 10px;
-			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-		}
-		
-		.questions {
-			margin-bottom: 20px;
-		}
-		
-		.question p {
-			font-size: 1.2em;
-		}
-		
-		.question label {
-			display: block;
-			margin: 10px 0;
-		}
-		
-		button {
-			display: block;
-			width: 100%;
-			padding: 10px;
-			margin-top: 20px;
-			background-color: #007bff;
-			color: white;
-			border: none;
-			border-radius: 5px;
-			cursor: pointer;
-		}
-		
-		button:hover {
-			background-color: #0056b3;
-		}
-	</style>
+	<link rel="stylesheet" type="text/css" href="/css/daily_card.css">
 </head>
 <body>
 	<header>
 			<h1>Football Quiz</h1>
 	</header>
-	<button onclick="homePage()">Home page</button>
-	<div class="quiz-container">
-		<form id="footballQuiz" class="quiz-form">
+	<button onclick="homePage('{{ index . 0 }}')">Home page</button>
+	<div class="quiz-container" data-token="{{ index . 0 }}">
 		{{ with index . 1 }}
+		<form id="footballQuiz" class="quiz-form" data-user-id="{{ .User_id }}" data-submit="{{ .Submit }}">
 			{{ range .UserQuestions }}
 				<div class="questions">
 					<p id="question" data-answer="{{ .RightOp }}">{{ .Question }}</p>
@@ -84,62 +24,10 @@
 				</div>
 			{{ end }}
 		{{ end }}
-			<button type="submit">Submit Answers</button>
+			<button id="ans" type="submit">Submit Answers</button>
 		</form>
 		<div id="results"></div>
 	</div>
-	<script>
-		function homePage() {
-			window.location.href = "/homePage?token={{ index . 0 }}";
-		}
-		document.addEventListener('DOMContentLoaded', hide);
-		document.getElementById('footballQuiz').addEventListener('submit', function(event) {
-			event.preventDefault();
-			const questionCount = 5;
-			let correctAnswersCount = 0;
-			const questions = document.querySelectorAll(".questions")
-			questions.forEach(question => {
-				const selectedAnswer = question.querySelector('input[type="radio"]:checked');
-				const correctAnswer = question.querySelector('#question').getAttribute('data-answer');
-				if (selectedAnswer && selectedAnswer.value === correctAnswer) {
-						correctAnswersCount++;
-				}
-			})
-			const resultsContainer = document.getElementById('results');
-			resultsContainer.innerHTML = `<p>You've answered ${correctAnswersCount} out of ${questionCount} questions correctly.</p>`;
-			let user_id = "{{ .User_id }}"
-			fetch(`/giveCard?user_id=${user_id}&answers=${correctAnswersCount}`, {
-					method: 'POST'
-			}).then(response => {
-					if (response.ok) {
-							return response.json();
-					} else {
-							throw new Error('Network response was not ok.');
-					}
-			}).then(data => {
-					if(data.error) {
-						alert(data.error);
-					}
-					else if (data.success){
-						alert(data.success);
-						window.location.href = `/collection?token=${data.token}`;
-					}
-			}).catch(error => {
-					console.error('There was a problem with the fetch operation:', error);
-			});
-		});
-		function hide() {
-			let submit = "{{ .Submit }}";
-			console.log(submit);
-			if ( submit == "true" ){
-				const quizForm = document.getElementById('footballQuiz');
-				quizForm.style.display = 'none';
-				const quizContainer = document.querySelector('.quiz-container');
-				const message = document.createElement('p');
-				message.textContent = 'The form has already been submitted.';
-				quizContainer.appendChild(message);
-			}
-		}
-	</script>
+	<script src="script/daily_card.js"></script>
 </body>
 </html>
