@@ -1,7 +1,7 @@
 # FOOTBALL TOOLS
 
 ## Project description
-Footbal Tools is web application for footbal enthusiasts where they can create and manage their favourite teams. Player cards are dropping out of packs.
+Footbal Tools is web application for footbal enthusiasts where they can create and manage their favourite teams. Player cards are dropping after answering to questions.
 
 ## Participants:
 Ydrys Angsat, Yernur Nurlanov
@@ -20,9 +20,15 @@ go get -u github.com/sirupsen/logrus
 4. Run your project: ```go run main.go```
 5. Open a web browser and go to ```http://localhost:8080/register``` to access the registration page.
 ## Screenshots
+### Registration page
 ![Registration page](images/screenshot.jpg)
+### Admin page
 ![Admin page](images/adminpage.jpg)
+### Home page
 ![Home page](images/homepage.jpg)
+### Collection page
 ![Collection page](images/collectionpage.jpg)
+### Market page
 ![Market page](images/marketpage.jpg)
+### Daily Card page
 ![Daily Card page](images/dailycardpage.jpg)
