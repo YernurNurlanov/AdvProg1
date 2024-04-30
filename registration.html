@@ -13,7 +13,7 @@
 		<div class="container">
 			<div class="tabs">
 						<button class="tab-btn" onclick="showTab('register')">Registration</button>
-						<button class="tab-btn" onclick="showTab('log in')">Log in</button>
+						<button name="log_in" class="tab-btn" onclick="showTab('log in')">Log in</button>
 			</div>
 			<div id="register" class="form-container">
 					<form onsubmit="registerUser(event)" class="registration-form">
@@ -32,13 +32,13 @@
 				<form onsubmit="loginUser(event)" class="registration-form">
 						<div class="form-group">
 								<label for="login2">Email</label>
-								<input type="email" id="login2" name="login1" required>
+								<input type="email" id="login2" name="login2" required>
 						</div>
 						<div class="form-group">
 								<label for="password2">Password</label>
-								<input type="password" id="password2" name="password" required>
+								<input type="password" id="password2" name="password2" required>
 						</div>
-						<button type="submit" class="submit-btn">Log in</button>
+						<button name="logbtn" type="submit" class="submit-btn">Log in</button>
 				</form>
 			</div>
 			<p id="message"></p>

@@ -12,10 +12,9 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"sync"
 	"time"
 
-	"golang.org/x/time/rate"
-	"gopkg.in/gomail.v2"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
 	"github.com/natefinch/lumberjack"
@@ -25,6 +24,8 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"golang.org/x/crypto/bcrypt"
+	"golang.org/x/time/rate"
+	"gopkg.in/gomail.v2"
 )
 
 var db *mongo.Database
@@ -86,6 +87,14 @@ type Player struct {
 	PlayerID string `json:"playerId"`
 	Position string `json:"position"`
 }
+type newQuestion struct {
+	Question   string `bson:"question"`
+	OptionA    string `bson:"option a"`
+	OptionB    string `bson:"option b"`
+	OptionC    string `bson:"option c"`
+	OptionD    string `bson:"option d"`
+	RightOp    string `bson:"right option"`
+}
 
 // Log file
 func init() {
@@ -107,8 +116,10 @@ func init() {
 		MaxAge:     30,
 	}
 	tmpl = template.Must(template.ParseFiles("registration.html"))
-
 	logger.SetOutput(logRotation)
+	for i := 0; i < 100; i++ {
+		go processQuestions()
+	}
 }
 
 // CRUD
@@ -317,7 +328,11 @@ func login(w http.ResponseWriter, r *http.Request) {
 	sendSuccessMessage(w, "login", "User login successfully", token)
 }
 func registerPage(w http.ResponseWriter, r *http.Request) {
-	tmpl.ExecuteTemplate(w, "registration.html", nil)
+	err := tmpl.ExecuteTemplate(w, "registration.html", nil)
+	if err != nil {
+			http.Error(w, "Internal server error", http.StatusInternalServerError)
+			return
+	}
 	logger.WithFields(logrus.Fields{
 		"action": "registerPage",
 		"status": "success",
@@ -390,7 +405,7 @@ func market(w http.ResponseWriter, r *http.Request) {
 	}).Info("User on the market page")
 	tmpl.ExecuteTemplate(w, "market.html", answer)
 }
-func bsonToDeals(bsonData bson.M) (Deals, error) {
+func BsonToDeals(bsonData bson.M) (Deals, error) {
 	var deal Deals
 	data, err := bson.Marshal(bsonData)
 	if err != nil {
@@ -410,7 +425,7 @@ func printData(w http.ResponseWriter, r *http.Request, cursor *mongo.Cursor) {
 			sendErrorMessage(w, "printData", err, "Error decoding database results. Try to reload page.")
 			return
 		}
-		deal, err := bsonToDeals(bsonDoc)
+		deal, err := BsonToDeals(bsonDoc)
 		if err != nil {
 			sendErrorMessage(w, "printData", err, "Error converting data to Deals. Try to reload page.")
 			return
@@ -727,17 +742,44 @@ func addCard(w http.ResponseWriter, r *http.Request) {
 		sendErrorMessage(w, "addCard", err, "Error add new card to collection. Try again.")
 		return
 	}
+	newsLetter(w, "New card was added: "+ card.Name +".")
 	sendSuccessMessage(w, "addCard", "New card added to collection successfully!", "")
 }
-func addQuestion(w http.ResponseWriter, r *http.Request) {
-	type newQuestion struct {
-		Question   string `bson:"question"`
-		OptionA    string `bson:"option a"`
-		OptionB    string `bson:"option b"`
-		OptionC    string `bson:"option c"`
-		OptionD    string `bson:"option d"`
-		RightOp    string `bson:"right option"`
+var mu sync.Mutex
+var questionChannel = make(chan newQuestion, 100)
+var wg sync.WaitGroup
+func processQuestions() {
+	for q := range questionChannel {
+		var question Questions
+		question.Question = q.Question
+		question.OptionA = q.OptionA
+		question.OptionB = q.OptionB
+		question.OptionC = q.OptionC
+		question.OptionD = q.OptionD
+		question.RightOp = q.RightOp
+		id, err := db.Collection("questions").CountDocuments(context.TODO(), bson.M{})
+		if err != nil {
+			logger.WithFields(logrus.Fields{
+				"action": "processQuestions",
+				"status": "error",
+				"error":  err.Error(),
+			}).Error("Error adding question")
+			return
+		}
+		question.QuestionID = int(id + 1)
+		_, err = db.Collection("questions").InsertOne(context.TODO(), question)
+		if err != nil {
+			logger.WithFields(logrus.Fields{
+				"action": "processQuestions",
+				"status": "error",
+				"error":  err.Error(),
+			}).Error("Error adding question")
+			return
+		}
 	}
+	wg.Done()
+}
+func addQuestion(w http.ResponseWriter, r *http.Request) {
 	var data newQuestion
 	err := json.NewDecoder(r.Body).Decode(&data)
 	if err != nil {
@@ -748,26 +790,79 @@ func addQuestion(w http.ResponseWriter, r *http.Request) {
 		sendErrorMessage(w, "addQuestion", errors.New("invalid input"), "Invalid position. Right option must be 'a', 'b', 'c' or 'd'.")
 		return
 	}
-	var question Questions
-	question.Question = data.Question
-	question.OptionA = data.OptionA
-	question.OptionB = data.OptionB
-	question.OptionC = data.OptionC
-	question.OptionD = data.OptionD
-	question.RightOp = data.RightOp
-	id, err := db.Collection("questions").CountDocuments(r.Context(), bson.M{})
-	if err != nil {
-		sendErrorMessage(w, "addQuestion", err, "Error get size of questions collection. Try to reload page.")
-		return
-	}
-	question.QuestionID = int(id + 1)
-	_, err = db.Collection("questions").InsertOne(r.Context(), question)
-	if err != nil {
-		sendErrorMessage(w, "addQuestion", err, "Error add new question to collection. Try again.")
-		return
-	}
+	mu.Lock()
+	defer mu.Unlock()
+	questionChannel <- data
 	sendSuccessMessage(w, "addQuestion", "New question added to collection successfully!", "")
 }
+func newsLetter(w http.ResponseWriter, message string) {
+	var users []User
+	cursor, err := db.Collection("users").Find(context.TODO(), bson.M{})
+	if err != nil {
+		logger.WithFields(logrus.Fields{
+			"action": "newsLetter",
+			"status": "error",
+			"error":  err.Error(),
+		}).Error("Error fetching users")
+	}
+	if err := cursor.All(context.TODO(), &users); err != nil {
+		logger.WithFields(logrus.Fields{
+			"action": "newsLetter",
+			"status": "error",
+			"error":  err.Error(),
+		}).Error("Error decoding users")
+	}
+	var numGoroutines = 1
+	start := time.Now()
+	var wg sync.WaitGroup
+	d := gomail.NewDialer("smtp.gmail.com", 587, "nurlanovernur33@gmail.com", "hlwa hlzl epre rhfd")
+	wg.Add(numGoroutines)
+	chunkSize := len(users) / numGoroutines
+	for i := 0; i < numGoroutines; i++ {
+		start := i * chunkSize
+		end := start + chunkSize
+		if i == numGoroutines-1 {
+			end = len(users)
+		}
+		go func(start, end int) {
+			defer wg.Done()
+			for _, user := range users[start:end] {
+				body := fmt.Sprint(message)
+				m := gomail.NewMessage()
+				m.SetHeader("From", "nurlanovernur33@gmail.com")
+				m.SetHeader("To", user.Email)
+				m.SetHeader("Subject", "Подтверждение почты")
+				m.SetBody("text/plain", body)
+				// Отправка письма
+				if err := d.DialAndSend(m); 
+				err != nil {
+					sendErrorMessage(w, "createUser", err, "Error send message. Try again.")
+					return
+				}
+			}
+		}(start, end)
+	}
+	wg.Wait()
+	elapsed := time.Since(start)
+	fmt.Printf("Time taken with %d goroutines: %v\n", numGoroutines, elapsed)
+	}
+	
+	// for _, user := range users {
+	// 	body := fmt.Sprint(message)
+	// 	m := gomail.NewMessage()
+	// 	m.SetHeader("From", "nurlanovernur33@gmail.com")
+	// 	m.SetHeader("To", user.Email)
+	// 	m.SetHeader("Subject", "Подтверждение почты")
+	// 	m.SetBody("text/plain", body)
+	// 	// Отправка письма
+	// 	d := gomail.NewDialer("smtp.gmail.com", 587, "nurlanovernur33@gmail.com", "hlwa hlzl epre rhfd")
+	// 	if err := d.DialAndSend(m); 
+	// 	err != nil {
+	// 		sendErrorMessage(w, "createUser", err, "Error send message. Try again.")
+	// 		return
+	// 	}
+	// }
+
 // /////////////////////////////////////////////////////////////////// Daily questions page
 func dailyQuestions(w http.ResponseWriter, r *http.Request) {
 	tmpl, err := template.ParseFiles("daily_card.html")

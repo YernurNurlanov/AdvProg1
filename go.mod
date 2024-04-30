@@ -5,6 +5,7 @@ go 1.21.5
 require go.mongodb.org/mongo-driver v1.13.1
 
 require (
+	github.com/blang/semver v3.5.1+incompatible // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc // indirect
@@ -139,6 +140,7 @@ require (
 	github.com/sirupsen/logrus v1.9.3 // indirect
 	github.com/snowflakedb/gosnowflake v1.7.1 // indirect
 	github.com/stretchr/testify v1.8.4
+	github.com/tebeka/selenium v0.9.9
 	github.com/xanzy/go-gitlab v0.95.2 // indirect
 	github.com/xdg-go/pbkdf2 v1.0.0 // indirect
 	github.com/xdg-go/scram v1.1.2 // indirect
