@@ -1,7 +1,7 @@
 # FOOTBALL TOOLS
 
 ## Project description
-Footbal Tools is web application for footbal enthusiasts where they can create and manage their favourite teams. Player cards are dropping after answering to questions.
+Footbal Tools is web application for footbal enthusiasts where they can create and manage their favourite teams. Player cards are dropping after answering to questions. (not finished)
 
 ## Participants:
 Ydrys Angsat, Yernur Nurlanov
