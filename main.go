@@ -812,57 +812,22 @@ func newsLetter(w http.ResponseWriter, message string) {
 			"error":  err.Error(),
 		}).Error("Error decoding users")
 	}
-	var numGoroutines = 1
-	start := time.Now()
-	var wg sync.WaitGroup
-	d := gomail.NewDialer("smtp.gmail.com", 587, "nurlanovernur33@gmail.com", "hlwa hlzl epre rhfd")
-	wg.Add(numGoroutines)
-	chunkSize := len(users) / numGoroutines
-	for i := 0; i < numGoroutines; i++ {
-		start := i * chunkSize
-		end := start + chunkSize
-		if i == numGoroutines-1 {
-			end = len(users)
+	for _, user := range users {
+		body := fmt.Sprint(message)
+		m := gomail.NewMessage()
+		m.SetHeader("From", "nurlanovernur33@gmail.com")
+		m.SetHeader("To", user.Email)
+		m.SetHeader("Subject", "Подтверждение почты")
+		m.SetBody("text/plain", body)
+		// Отправка письма
+		d := gomail.NewDialer("smtp.gmail.com", 587, "nurlanovernur33@gmail.com", "hlwa hlzl epre rhfd")
+		if err := d.DialAndSend(m); 
+		err != nil {
+			sendErrorMessage(w, "createUser", err, "Error send message. Try again.")
+			return
 		}
-		go func(start, end int) {
-			defer wg.Done()
-			for _, user := range users[start:end] {
-				body := fmt.Sprint(message)
-				m := gomail.NewMessage()
-				m.SetHeader("From", "nurlanovernur33@gmail.com")
-				m.SetHeader("To", user.Email)
-				m.SetHeader("Subject", "Подтверждение почты")
-				m.SetBody("text/plain", body)
-				// Отправка письма
-				if err := d.DialAndSend(m); 
-				err != nil {
-					sendErrorMessage(w, "createUser", err, "Error send message. Try again.")
-					return
-				}
-			}
-		}(start, end)
 	}
-	wg.Wait()
-	elapsed := time.Since(start)
-	fmt.Printf("Time taken with %d goroutines: %v\n", numGoroutines, elapsed)
-	}
-	
-	// for _, user := range users {
-	// 	body := fmt.Sprint(message)
-	// 	m := gomail.NewMessage()
-	// 	m.SetHeader("From", "nurlanovernur33@gmail.com")
-	// 	m.SetHeader("To", user.Email)
-	// 	m.SetHeader("Subject", "Подтверждение почты")
-	// 	m.SetBody("text/plain", body)
-	// 	// Отправка письма
-	// 	d := gomail.NewDialer("smtp.gmail.com", 587, "nurlanovernur33@gmail.com", "hlwa hlzl epre rhfd")
-	// 	if err := d.DialAndSend(m); 
-	// 	err != nil {
-	// 		sendErrorMessage(w, "createUser", err, "Error send message. Try again.")
-	// 		return
-	// 	}
-	// }
-
+}
 // /////////////////////////////////////////////////////////////////// Daily questions page
 func dailyQuestions(w http.ResponseWriter, r *http.Request) {
 	tmpl, err := template.ParseFiles("daily_card.html")
