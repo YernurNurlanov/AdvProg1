@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Room</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        #chatbox { width: 80%; height: 400px; border: 1px solid #ccc; padding: 10px; overflow-y: scroll; }
+        #message { width: 80%; padding: 10px; margin-top: 10px; }
+        #send { padding: 10px; }
+        #chatIDInput { margin-bottom: 10px; }
+        #startChat { padding: 10px; }
+    </style>
+</head>
+<body>
+
+    <div id="chatIDInput">
+        <button id="startChat">Start Chat</button>
+    </div>
+
+    <script>
+        document.getElementById('startChat').addEventListener('click', function() {
+            // Check if the chat box already exists
+            if (!document.getElementById('chatbox')) {
+                // Create chat box
+                var chatbox = document.createElement('div');
+                chatbox.id = 'chatbox';
+                document.body.appendChild(chatbox);
+
+                // Create message input
+                var messageInput = document.createElement('input');
+                messageInput.id = 'message';
+                messageInput.placeholder = 'Type your message...';
+                document.body.appendChild(messageInput);
+
+                // Create send button
+                var sendButton = document.createElement('button');
+                sendButton.id = 'send';
+                sendButton.innerText = 'Send';
+                document.body.appendChild(sendButton);
+
+                // Add event listener for send button
+                sendButton.addEventListener('click', function() {
+                    var message = messageInput.value;
+                    if (message) {
+                        var messageParagraph = document.createElement('p');
+                        messageParagraph.innerText = message;
+                        chatbox.appendChild(messageParagraph);
+                        messageInput.value = '';
+                    }
+                });
+            }
+        });
+    </script>
+
+</body>
+</html>

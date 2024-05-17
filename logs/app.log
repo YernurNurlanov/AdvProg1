@@ -1777,3 +1777,74 @@ time="2024-04-19T14:08:47+05:00" level=info msg="New card added to collection su
 time="2024-04-19T14:10:15+05:00" level=info msg="User on the admin page" action=admin status=success
 time="2024-04-19T14:12:55+05:00" level=error msg="Error send message. Try again." action=createUser error="dial tcp 74.125.205.109:587: i/o timeout" status=error
 time="2024-04-19T14:12:55+05:00" level=info msg="New card added to collection successfully!" action=addCard status=success
+time="2024-05-17T11:14:22+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-05-17T11:14:31+06:00" level=info msg="User login successfully" action=login status=success
+time="2024-05-17T11:14:34+06:00" level=info msg="User on the dailyQuestions page" action=dailyQuestions status=success
+time="2024-05-17T11:14:38+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-05-17T11:14:39+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-05-17T11:14:42+06:00" level=info msg="User accessed the collection page" action=collection status=success userID=1
+time="2024-05-17T11:23:32+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-05-17T11:25:27+06:00" level=error msg="Incorrect password entered. Try again." action=login error="crypto/bcrypt: hashedPassword is not the hash of the given password" status=error
+time="2024-05-17T11:25:34+06:00" level=error msg="Incorrect password entered. Try again." action=login error="crypto/bcrypt: hashedPassword is not the hash of the given password" status=error
+time="2024-05-17T11:25:40+06:00" level=error msg="Incorrect password entered. Try again." action=login error="crypto/bcrypt: hashedPassword is not the hash of the given password" status=error
+time="2024-05-17T11:25:51+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-05-17T11:25:59+06:00" level=error msg="Incorrect password entered. Try again." action=login error="crypto/bcrypt: hashedPassword is not the hash of the given password" status=error
+time="2024-05-17T11:26:15+06:00" level=error msg="User with email: 'admin@gmail.com' already exists. Try again." action=createUser error="User with email: 'admin@gmail.com' already exists. Try again." status=error
+time="2024-05-17T11:26:21+06:00" level=error msg="Incorrect password entered. Try again." action=login error="crypto/bcrypt: hashedPassword is not the hash of the given password" status=error
+time="2024-05-17T11:26:27+06:00" level=error msg="Incorrect password entered. Try again." action=login error="crypto/bcrypt: hashedPassword is not the hash of the given password" status=error
+time="2024-05-17T11:26:34+06:00" level=error msg="Incorrect password entered. Try again." action=login error="crypto/bcrypt: hashedPassword is not the hash of the given password" status=error
+time="2024-05-17T11:26:52+06:00" level=info msg="User login successfully" action=login status=success
+time="2024-05-17T11:28:14+06:00" level=info msg=Admin action=login status=success
+time="2024-05-17T11:28:14+06:00" level=info msg="User on the admin page" action=admin status=success
+time="2024-05-17T11:59:00+06:00" level=info msg="User login successfully" action=login status=success
+time="2024-05-17T12:07:05+06:00" level=info msg=Admin action=login status=success
+time="2024-05-17T12:07:05+06:00" level=info msg="User on the admin page" action=admin status=success
+time="2024-05-17T12:12:11+06:00" level=info msg="User login successfully" action=login status=success
+time="2024-05-17T12:12:45+06:00" level=info msg="User login successfully" action=login status=success
+time="2024-05-17T12:13:48+06:00" level=info msg="User login successfully" action=login status=success
+time="2024-05-17T12:18:02+06:00" level=info msg="User login successfully" action=login status=success
+time="2024-05-17T12:18:16+06:00" level=info msg="User on the dailyQuestions page" action=dailyQuestions status=success
+time="2024-05-17T12:18:20+06:00" level=info msg="User on the market page" action=market status=success
+time="2024-05-17T12:18:21+06:00" level=info msg="Data was printed" action=marketCards page=1 status=success
+time="2024-05-17T12:21:59+06:00" level=info msg="User login successfully" action=login status=success
+time="2024-05-17T12:22:00+06:00" level=info msg="User on the chat page" action=chatHandler status=success
+time="2024-05-17T12:24:49+06:00" level=info msg="User login successfully" action=login status=success
+time="2024-05-17T12:24:51+06:00" level=info msg="User on the chat page" action=chatHandler status=success
+time="2024-05-17T13:19:55+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-05-17T13:20:02+06:00" level=info msg="User login successfully" action=login status=success
+time="2024-05-17T13:20:04+06:00" level=info msg="User on the chat page" action=chatHandler status=success
+time="2024-05-17T13:20:15+06:00" level=info msg=Admin action=login status=success
+time="2024-05-17T13:20:15+06:00" level=info msg="User on the admin page" action=admin status=success
+time="2024-05-17T13:20:31+06:00" level=info msg="User login successfully" action=login status=success
+time="2024-05-17T13:20:33+06:00" level=info msg="User on the chat page" action=chatHandler status=success
+time="2024-05-17T13:24:02+06:00" level=info msg="User login successfully" action=login status=success
+time="2024-05-17T13:24:04+06:00" level=info msg="User on the chat page" action=chatHandler status=success
+time="2024-05-17T13:24:34+06:00" level=info msg="User on the chat page" action=chatHandler status=success
+time="2024-05-17T13:24:53+06:00" level=info msg="User on the chat page" action=chatHandler status=success
+time="2024-05-17T13:25:22+06:00" level=info msg=Admin action=login status=success
+time="2024-05-17T13:25:22+06:00" level=info msg="User on the admin page" action=admin status=success
+time="2024-05-17T13:25:32+06:00" level=info msg=Admin action=login status=success
+time="2024-05-17T13:25:32+06:00" level=info msg="User on the admin page" action=admin status=success
+time="2024-05-17T13:34:58+06:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-05-17T13:35:04+06:00" level=info msg="User login successfully" action=login status=success
+time="2024-05-17T13:35:10+06:00" level=info msg="User on the chat page" action=chatHandler status=success
+time="2024-05-17T13:35:51+06:00" level=error msg="Error fetching user data." action=chatHandler error="canceled while checking out a connection from connection pool: context canceled; total connections: 1, maxPoolSize: 100, idle connections: 0, wait duration: 3.3765796s" status=error
+time="2024-05-17T13:35:57+06:00" level=info msg="User login successfully" action=login status=success
+time="2024-05-17T13:35:57+06:00" level=error msg="Incorrect login entered. Try again." action=login error="canceled while checking out a connection from connection pool: context canceled; total connections: 3, maxPoolSize: 100, idle connections: 0, wait duration: 118.1474ms" status=error
+time="2024-05-17T13:35:57+06:00" level=error msg="Incorrect login entered. Try again." action=login error="connection(ac-vr6vttd-shard-00-02.7w9s0t2.mongodb.net:27017[-8]) incomplete read of message header: context canceled" status=error
+time="2024-05-17T13:35:59+06:00" level=info msg="User on the chat page" action=chatHandler status=success
+time="2024-05-17T13:37:51+06:00" level=error msg="Error fetching user data." action=chatHandler error="canceled while checking out a connection from connection pool: context canceled; total connections: 1, maxPoolSize: 100, idle connections: 0, wait duration: 3.6243536s" status=error
+time="2024-05-17T13:37:55+06:00" level=info msg="User login successfully" action=login status=success
+time="2024-05-17T13:37:57+06:00" level=info msg="User on the chat page" action=chatHandler status=success
+time="2024-05-17T13:39:50+06:00" level=info msg="User on the chat page" action=chatHandler status=success
+time="2024-05-17T13:39:54+06:00" level=info msg="User login successfully" action=login status=success
+time="2024-05-17T13:39:55+06:00" level=info msg="User on the chat page" action=chatHandler status=success
+time="2024-05-17T13:40:04+06:00" level=info msg="User login successfully" action=login status=success
+time="2024-05-17T13:40:05+06:00" level=info msg="User on the chat page" action=chatHandler status=success
+time="2024-05-17T13:42:56+06:00" level=info msg=Admin action=login status=success
+time="2024-05-17T13:42:56+06:00" level=info msg="User on the admin page" action=admin status=success
+time="2024-05-17T13:44:44+06:00" level=info msg=Admin action=login status=success
+time="2024-05-17T13:44:44+06:00" level=info msg="User on the admin page" action=admin status=success
+time="2024-05-17T13:44:44+06:00" level=info msg=Admin action=login status=success
+time="2024-05-17T13:44:44+06:00" level=error msg="Error fetching users" action=getAllUsers error="connection(ac-vr6vttd-shard-00-02.7w9s0t2.mongodb.net:27017[-8]) incomplete read of message header: context canceled" status=error
+time="2024-05-17T13:44:44+06:00" level=info msg="User on the admin page" action=admin status=success

@@ -33,6 +33,12 @@ var logger *logrus.Logger
 var tmpl *template.Template
 var limiter = rate.NewLimiter(1, 3)
 
+type Chat struct {
+	Id_support string `bson:"_id,omitempty"`
+	Id_client string `bson:"_id,omitempty"`
+	Is_finished bool `json:"is_finished"`
+}
+
 type User struct {
 	ID       string `bson:"_id,omitempty"`
 	User_id  string `json:"user_id"`
@@ -88,12 +94,12 @@ type Player struct {
 	Position string `json:"position"`
 }
 type newQuestion struct {
-	Question   string `bson:"question"`
-	OptionA    string `bson:"option a"`
-	OptionB    string `bson:"option b"`
-	OptionC    string `bson:"option c"`
-	OptionD    string `bson:"option d"`
-	RightOp    string `bson:"right option"`
+	Question string `bson:"question"`
+	OptionA  string `bson:"option a"`
+	OptionB  string `bson:"option b"`
+	OptionC  string `bson:"option c"`
+	OptionD  string `bson:"option d"`
+	RightOp  string `bson:"right option"`
 }
 
 // Log file
@@ -175,7 +181,7 @@ func createUser(w http.ResponseWriter, r *http.Request) {
 		sendErrorMessage(w, "createUser", errors.New(errorMessage), errorMessage)
 		return
 	}
-	_, err = db.Collection("confirm_users").InsertOne(r.Context(),newUser)
+	_, err = db.Collection("confirm_users").InsertOne(r.Context(), newUser)
 	if err != nil {
 		errorMessage := "error add user. try again"
 		sendErrorMessage(w, "createUser", errors.New(errorMessage), errorMessage)
@@ -184,21 +190,20 @@ func createUser(w http.ResponseWriter, r *http.Request) {
 	////////////////////////////////// gmail message
 	body := fmt.Sprintf("Для подтверждения почты перейдите по ссылке: https://advprog1.onrender.com/confirmPage?email=%s", email)
 
-    // Настройка клиента для отправки письма
-    m := gomail.NewMessage()
-    m.SetHeader("From", "nurlanovernur33@gmail.com")
-    m.SetHeader("To", email)
-    m.SetHeader("Subject", "Подтверждение почты")
-    m.SetBody("text/plain", body)
+	// Настройка клиента для отправки письма
+	m := gomail.NewMessage()
+	m.SetHeader("From", "nurlanovernur33@gmail.com")
+	m.SetHeader("To", email)
+	m.SetHeader("Subject", "Подтверждение почты")
+	m.SetBody("text/plain", body)
 
-    // Отправка письма
-    d := gomail.NewDialer("smtp.gmail.com", 587, "nurlanovernur33@gmail.com", "hlwa hlzl epre rhfd")
-    if err := d.DialAndSend(m); 
-		err != nil {
-			sendErrorMessage(w, "createUser", err, "Error send message. Try again.")
-      return
-    }
-		////////////////////////////////
+	// Отправка письма
+	d := gomail.NewDialer("smtp.gmail.com", 587, "nurlanovernur33@gmail.com", "hlwa hlzl epre rhfd")
+	if err := d.DialAndSend(m); err != nil {
+		sendErrorMessage(w, "createUser", err, "Error send message. Try again.")
+		return
+	}
+	////////////////////////////////
 	sendSuccessMessage(w, "createUser", "User created successfully. Confirm your email and log in.", "")
 }
 func confirmPage(w http.ResponseWriter, r *http.Request) {
@@ -291,7 +296,7 @@ func confirm(w http.ResponseWriter, r *http.Request) {
 		sendErrorMessage(w, "confirm", err, "Error creating users team. Try again.")
 		return
 	}
-	_, err = db.Collection("confirm_users").DeleteOne(r.Context(), bson.M{ "email": email})
+	_, err = db.Collection("confirm_users").DeleteOne(r.Context(), bson.M{"email": email})
 	if err != nil {
 		sendErrorMessage(w, "confirm", err, "Error creating users team. Try again.")
 		return
@@ -330,8 +335,8 @@ func login(w http.ResponseWriter, r *http.Request) {
 func registerPage(w http.ResponseWriter, r *http.Request) {
 	err := tmpl.ExecuteTemplate(w, "registration.html", nil)
 	if err != nil {
-			http.Error(w, "Internal server error", http.StatusInternalServerError)
-			return
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
 	}
 	logger.WithFields(logrus.Fields{
 		"action": "registerPage",
@@ -742,12 +747,14 @@ func addCard(w http.ResponseWriter, r *http.Request) {
 		sendErrorMessage(w, "addCard", err, "Error add new card to collection. Try again.")
 		return
 	}
-	newsLetter(w, "New card was added: "+ card.Name +".")
+	newsLetter(w, "New card was added: "+card.Name+".")
 	sendSuccessMessage(w, "addCard", "New card added to collection successfully!", "")
 }
+
 var mu sync.Mutex
 var questionChannel = make(chan newQuestion, 100)
 var wg sync.WaitGroup
+
 func processQuestions() {
 	for q := range questionChannel {
 		var question Questions
@@ -821,13 +828,13 @@ func newsLetter(w http.ResponseWriter, message string) {
 		m.SetBody("text/plain", body)
 		// Отправка письма
 		d := gomail.NewDialer("smtp.gmail.com", 587, "nurlanovernur33@gmail.com", "hlwa hlzl epre rhfd")
-		if err := d.DialAndSend(m); 
-		err != nil {
+		if err := d.DialAndSend(m); err != nil {
 			sendErrorMessage(w, "createUser", err, "Error send message. Try again.")
 			return
 		}
 	}
 }
+
 // /////////////////////////////////////////////////////////////////// Daily questions page
 func dailyQuestions(w http.ResponseWriter, r *http.Request) {
 	tmpl, err := template.ParseFiles("daily_card.html")
@@ -880,6 +887,80 @@ func dailyQuestions(w http.ResponseWriter, r *http.Request) {
 	}).Info("User on the dailyQuestions page")
 	tmpl.ExecuteTemplate(w, "daily_card.html", answer)
 }
+
+// Chat page
+func chatHandler(w http.ResponseWriter, r *http.Request) {
+	tmpl, err := template.ParseFiles("chat.html")
+	if err != nil {
+		logger.WithFields(logrus.Fields{
+			"action": "chatHandler",
+			"status": "error",
+			"error":  err.Error(),
+		}).Error("Error parsing file 'chat.html'")
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	tokenString := r.URL.Query().Get("token")
+	token, err := verifyToken(tokenString)
+	if err != nil {
+		logger.WithFields(logrus.Fields{
+			"action": "chatHandler",
+			"status": "error",
+			"error":  err.Error(),
+		}).Error("Error verifying token")
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
+
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		logger.WithFields(logrus.Fields{
+			"action": "chatHandler",
+			"status": "error",
+			"error":  err,
+		}).Error("Failed to convert claims to jwt.Claims.")
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
+
+	userID, ok := claims["user_id"].(string)
+	if !ok {
+		logger.WithFields(logrus.Fields{
+			"action": "chatHandler",
+			"status": "error",
+		}).Error("User unauthorized.")
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
+
+	var user User
+	err = db.Collection("users").FindOne(r.Context(), bson.M{"user_id": userID}, options.FindOne().SetProjection(bson.M{"user_id": 1, "_id": 0})).Decode(&user)
+	if err != nil {
+		logger.WithFields(logrus.Fields{
+			"action": "chatHandler",
+			"status": "error",
+			"error":  err.Error(),
+		}).Error("Error fetching user data.")
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	data := struct {
+		TokenString string
+		User        User
+	}{
+		TokenString: tokenString,
+		User:        user,
+	}
+
+	logger.WithFields(logrus.Fields{
+		"action": "chatHandler",
+		"status": "success",
+	}).Info("User on the chat page")
+	tmpl.ExecuteTemplate(w, "chat.html", data)
+}
+
 func giveCard(w http.ResponseWriter, r *http.Request) {
 	user_id := r.URL.Query().Get("user_id")
 	answers := r.URL.Query().Get("answers")
@@ -985,6 +1066,7 @@ func updateCollectionPeriodically(ctx context.Context) {
 		}
 	}
 }
+
 // /////////////////////////////////////////////////////////////////// Home page
 func homePage(w http.ResponseWriter, r *http.Request) {
 	tmpl, err := template.ParseFiles("homepage.html")
@@ -1065,6 +1147,7 @@ func updateUser(w http.ResponseWriter, r *http.Request) {
 		"message": fmt.Sprintf("User updated: %d document(s) modified", result.ModifiedCount),
 	})
 }
+
 // Error Handling with log messages
 func sendErrorMessage(w http.ResponseWriter, action string, err error, message string) {
 	logger.WithFields(logrus.Fields{
@@ -1126,7 +1209,7 @@ func authenticate(next http.Handler) http.Handler {
 		next.ServeHTTP(w, r)
 	})
 }
-//
+
 func respondWithJSON(w http.ResponseWriter, statusCode int, data interface{}) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(statusCode)
@@ -1166,6 +1249,8 @@ func handleRequests() {
 	rtr.HandleFunc("/giveCard", giveCard)
 	// Home page
 	rtr.Handle("/homePage", authenticate(http.HandlerFunc(homePage))).Methods("GET")
+	// Chat Page
+	rtr.Handle("/chatHandler", authenticate(http.HandlerFunc(chatHandler))).Methods("GET")
 	//
 	http.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("./css"))))
 	http.Handle("/script/", http.StripPrefix("/script/", http.FileServer(http.Dir("./script"))))
@@ -1188,4 +1273,5 @@ func main() {
 	ctx := context.Background()
 	go updateCollectionPeriodically(ctx)
 	handleRequests()
+	
 }

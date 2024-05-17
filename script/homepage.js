@@ -7,3 +7,7 @@ function market(token) {
 function quiz(token) {
 	window.location.href = `/dailyQuestions?token=${token}`;
 }
+
+function chat(token) {
+	window.location.href = `/chatHandler?token=${token}`;
+}

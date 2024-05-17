@@ -1,87 +1,160 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Football Manager</title>
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-	<link rel="stylesheet" type="text/css" href="/css/admin.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Football Manager - Administration Panel</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/admin.css">
 </head>
 <body>
-	<header>
-		<h1>Administration panel</h1>
-	</header>
-	<main>
-		<div class="container">
-			<div class="tabs">
-						<button class="tab-btn" onclick="showTab('addCards')">Add cards</button>
-						<button class="tab-btn" onclick="showTab('addQuestions')">Add questions</button>
-						<button class="tab-btn" onclick="showTab('deleteUser')">Delete user</button>
-			</div>
-			<div id="addCards" class="form-container">
-				<form onsubmit="addCards(event)">
-					<div class="form-group">
-							<label for="name">Name</label>
-							<input type="text" id="name" name="name" required>
-					</div>
-					<div class="form-group">
-						<label for="nationality">Nationality</label>
-						<input type="text" id="nationality" name="nationality" required>
-					</div>
-					<div class="form-group">
-						<label for="club">Club</label>
-						<input type="text" id="club" name="club" required>
-					</div>
-					<div class="form-group">
-						<label for="position">Position</label>
-						<input type="text" id="position" name="position" required>
-					</div>
-					<button type="submit" class="submit-btn">Add card</button>
-			</form>
-			</div>
-			<div id="addQuestions" class="form-container">
-				<form onsubmit="addQuestions(event)">
-					<div class="form-group">
-							<label for="question">Question</label>
-							<input type="text" id="question" name="question" required>
-					</div>
-					<div class="form-group">
-						<label for="option1">Option A</label>
-						<input type="text" id="option1" name="option1" required>
-					</div>
-					<div class="form-group">
-						<label for="option2">Option B</label>
-						<input type="text" id="option2" name="option2" required>
-					</div>
-					<div class="form-group">
-						<label for="option3">Option C</label>
-						<input type="text" id="option3" name="option3" required>
-					</div>
-					<div class="form-group">
-						<label for="option4">Option D</label>
-						<input type="text" id="option4" name="option4" required>
-					</div>
-					<div class="form-group">
-							<label for="rightOp">Right option</label>
-							<input type="password" id="rightOp" name="rightOp" required>
-					</div>
-					<button id="addQuestion" type="submit" class="submit-btn">Add Question</button>
-			</form>
-			</div>
-			<div id="deleteUser" class="form-container">
-				<form onsubmit="deleteUser(event)">
-					<p>Choose one user that you want to delete.</p>
-					<div class="users">
-					{{ range . }}
-						<label><input type="checkbox" class="user-checkbox" value="{{ .User_id }}"> {{ .ID }}, {{ .User_id }}, {{ .Email }}</label><br>
-					{{ end }}
-					</div>
-					<button type="submit" class="submit-btn">Delete</button>
-				</form>
-			</div>
-			<p id="message"></p>
-		</div>
-	</main>
-	<script src="/script/admin.js"></script>
+    <header>
+        <h1>Administration Panel</h1>
+    </header>
+    <main>
+        <div class="container">
+            <div class="tabs">
+                <button class="tab-btn" onclick="showTab('addCards')">Add Cards</button>
+                <button class="tab-btn" onclick="showTab('addQuestions')">Add Questions</button>
+                <button class="tab-btn" onclick="showTab('deleteUser')">Delete User</button>
+                <button class="tab-btn" onclick="showTab('chatSupport')">Chat Support</button>
+            </div>
+            <div id="addCards" class="form-container">
+                <form onsubmit="addCards(event)">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="nationality">Nationality</label>
+                        <input type="text" id="nationality" name="nationality" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="club">Club</label>
+                        <input type="text" id="club" name="club" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="position">Position</label>
+                        <input type="text" id="position" name="position" required>
+                    </div>
+                    <button type="submit" class="submit-btn">Add Card</button>
+                </form>
+            </div>
+            <div id="addQuestions" class="form-container" style="display: none;">
+                <form onsubmit="addQuestions(event)">
+                    <div class="form-group">
+                        <label for="question">Question</label>
+                        <input type="text" id="question" name="question" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="option1">Option A</label>
+                        <input type="text" id="option1" name="option1" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="option2">Option B</label>
+                        <input type="text" id="option2" name="option2" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="option3">Option C</label>
+                        <input type="text" id="option3" name="option3" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="option4">Option D</label>
+                        <input type="text" id="option4" name="option4" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="rightOp">Right Option</label>
+                        <input type="password" id="rightOp" name="rightOp" required>
+                    </div>
+                    <button type="submit" class="submit-btn">Add Question</button>
+                </form>
+            </div>
+            <div id="deleteUser" class="form-container" style="display: none;">
+                <form onsubmit="deleteUser(event)">
+                    <p>Choose one user that you want to delete.</p>
+                    <div class="users">
+                        {{ range . }}
+                            <label><input type="checkbox" class="user-checkbox" value="{{ .User_id }}"> {{ .ID }}, {{ .User_id }}, {{ .Email }}</label><br>
+                        {{ end }}
+                    </div>
+                    <button type="submit" class="submit-btn">Delete</button>
+                </form>
+            </div>
+            <div id="MyChats" class="form-container" style="display: none;">
+                <div>
+                    <h2>My Chats</h2>
+                    <div id="chatbox" class="chatbox"></div>
+                    <input type="text" id="message" placeholder="Type your message here..." />
+                    <button id="send" onclick="sendMessage()">Send</button>
+                </div>
+            </div>
+            <div id="AllChats" class="form-container" style="display: none;">
+                <div>
+                    <h2>All Chats</h2>
+                    <div id="chatbox" class="chatbox"></div>
+                    <input type="text" id="message" placeholder="Type your message here..." />
+                    <button id="send" onclick="sendMessage()">Send</button>
+                </div>
+            </div>
+            <p id="message"></p>
+        </div>
+    </main>
+    <script src="/script/admin.js"></script>
+    <script>
+        function showTab(tabId) {
+            document.getElementById('addCards').style.display = 'none';
+            document.getElementById('addQuestions').style.display = 'none';
+            document.getElementById('deleteUser').style.display = 'none';
+            document.getElementById('chatSupport').style.display = 'none';
+
+            document.getElementById(tabId).style.display = 'block';
+        }
+
+        function addCards(event) {
+            event.preventDefault();
+            // Add your JavaScript code to handle the form submission for adding cards
+            document.getElementById('message').textContent = 'Card added successfully!';
+        }
+
+        function addQuestions(event) {
+            event.preventDefault();
+            // Add your JavaScript code to handle the form submission for adding questions
+            document.getElementById('message').textContent = 'Question added successfully!';
+        }
+
+        function deleteUser(event) {
+            event.preventDefault();
+            // Add your JavaScript code to handle the form submission for deleting a user
+            document.getElementById('message').textContent = 'User deleted successfully!';
+        }
+
+        // WebSocket setup for chat support
+        const ws = new WebSocket(`ws://${window.location.host}/admin/ws`);
+        
+        ws.onopen = () => {
+            console.log("Connected to the chat server");
+        };
+
+        ws.onmessage = (event) => {
+            const chatbox = document.getElementById("chatbox");
+            const message = document.createElement("div");
+            message.textContent = event.data;
+            chatbox.appendChild(message);
+            chatbox.scrollTop = chatbox.scrollHeight;
+        };
+
+        ws.onclose = () => {
+            console.log("Disconnected from the chat server");
+        };
+
+        function sendMessage() {
+            const messageInput = document.getElementById("message");
+            const message = messageInput.value;
+            if (message) {
+                ws.send(message);
+                messageInput.value = "";
+            }
+        }
+    </script>
 </body>
 </html>
