@@ -17,6 +17,7 @@ import (
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
+	"github.com/gorilla/websocket"
 	"github.com/natefinch/lumberjack"
 	"github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson"
@@ -32,13 +33,25 @@ var db *mongo.Database
 var logger *logrus.Logger
 var tmpl *template.Template
 var limiter = rate.NewLimiter(1, 3)
-
-type Chat struct {
-	Id_support string `bson:"_id,omitempty"`
-	Id_client string `bson:"_id,omitempty"`
-	Is_finished bool `json:"is_finished"`
+var upgrader = websocket.Upgrader{
+	ReadBufferSize:  1024,
+	WriteBufferSize: 1024,
 }
-
+var adminConn *websocket.Conn
+var userConns = make(map[*websocket.Conn]bool)
+type Chat struct {
+	ID string `bson:"_id,omitempty"`
+	Id_support string `bson:"id_support"`
+	Id_client string `bson:"id_client"`
+	Is_finished bool `bson:"is_finished"`
+	Messages []Message `bson:"messages"`
+}
+type Message struct{
+		Sender string `bson:"sender_id"`
+		Role string `bson:"role"`
+		MessageText string `bson:"message"`
+		Timestamp   time.Time `bson:"time"`
+	}
 type User struct {
 	ID       string `bson:"_id,omitempty"`
 	User_id  string `json:"user_id"`
@@ -156,8 +169,6 @@ func getUserByID(w http.ResponseWriter, r *http.Request) {
 		"user":   user,
 	})
 }
-
-// /////////////////////////////////////////////////////////////////// Regisration page
 func createUser(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Only POST requests are allowed", http.StatusMethodNotAllowed)
@@ -203,7 +214,6 @@ func createUser(w http.ResponseWriter, r *http.Request) {
 		sendErrorMessage(w, "createUser", err, "Error send message. Try again.")
 		return
 	}
-	////////////////////////////////
 	sendSuccessMessage(w, "createUser", "User created successfully. Confirm your email and log in.", "")
 }
 func confirmPage(w http.ResponseWriter, r *http.Request) {
@@ -322,6 +332,19 @@ func login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	token, err := generateToken(&existingUser)
+
+	http.SetCookie(w, &http.Cookie{
+			Name:     "auth-token",
+			Value:    token,
+			HttpOnly: true,
+			Path:     "/",
+	})
+	http.SetCookie(w, &http.Cookie{
+		Name:  "user-data",
+		Value: existingUser.ID,
+		Path:  "/",
+	})
+	
 	if err != nil {
 		sendErrorMessage(w, "login", err, "Failed to generate token. Try to log in again.")
 		return
@@ -343,8 +366,112 @@ func registerPage(w http.ResponseWriter, r *http.Request) {
 		"status": "success",
 	}).Info("User on the page.")
 }
-
-// //////////////////////////////////////////////////////////////////// Market page
+func admin(w http.ResponseWriter, r *http.Request) {
+	tmpl, err := template.ParseFiles("admin.html")
+	if err != nil {
+		logger.WithFields(logrus.Fields{
+			"action": "admin",
+			"status": "error",
+			"error":  err.Error(),
+		}).Error("Error parse file 'admin.html'")
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+	logger.WithFields(logrus.Fields{
+		"action": "admin",
+		"status": "success",
+	}).Info("User on the admin page")
+	var users []User = getAllUsers(r)
+	tmpl.ExecuteTemplate(w, "admin.html", users)
+}
+func deleteUser(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodDelete {
+		http.Error(w, "Only DELETE requests are allowed", http.StatusMethodNotAllowed)
+		return
+	}
+	userID := r.URL.Query().Get("id")
+	_, err := db.Collection("users").DeleteOne(r.Context(), bson.M{"user_id": userID})
+	if err != nil {
+		sendErrorMessage(w, "deleteUser", err, "Error deleting user. Try again.")
+		return
+	}
+	_, err = db.Collection("collections").DeleteOne(r.Context(), bson.M{"user_id": userID})
+	if err != nil {
+		sendErrorMessage(w, "deleteUser", err, "Error deleting users collection. Try again.")
+		return
+	}
+	_, err = db.Collection("user_questions").DeleteOne(r.Context(), bson.M{"user_id": userID})
+	if err != nil {
+		sendErrorMessage(w, "deleteUser", err, "Error deleting users questions collection. Try again.")
+		return
+	}
+	_, err = db.Collection("teams").DeleteOne(r.Context(), bson.M{"user_id": userID})
+	if err != nil {
+		sendErrorMessage(w, "deleteUser", err, "Error deleting users team. Try again.")
+		return
+	}
+	_, err = db.Collection("cards_in_deal").DeleteMany(r.Context(), bson.M{"user_id": userID})
+	if err != nil {
+		sendErrorMessage(w, "deleteUser", err, "Error deleting users cards in deal. Try again.")
+		return
+	}
+	sendSuccessMessage(w, "deleteUser", "User was deleted.", "")
+}
+func getAllUsers(r *http.Request) []User {
+	var users []User
+	cursor, err := db.Collection("users").Find(r.Context(), bson.M{})
+	if err != nil {
+		logger.WithFields(logrus.Fields{
+			"action": "getAllUsers",
+			"status": "error",
+			"error":  err.Error(),
+		}).Error("Error fetching users")
+	}
+	if err := cursor.All(r.Context(), &users); err != nil {
+		logger.WithFields(logrus.Fields{
+			"action": "getAllUsers",
+			"status": "error",
+			"error":  err.Error(),
+		}).Error("Error decoding users")
+	}
+	return users
+}
+func addCard(w http.ResponseWriter, r *http.Request) {
+	type newCard struct {
+		Name        string `json:"name"`
+		Nationality string `json:"nationality"`
+		Club        string `json:"club"`
+		Position    string `json:"position"`
+	}
+	var data newCard
+	err := json.NewDecoder(r.Body).Decode(&data)
+	if err != nil {
+		sendErrorMessage(w, "addCard", err, "Error decoding new card data. Try again.")
+		return
+	}
+	if data.Position != "Forward" && data.Position != "Midfielder" && data.Position != "Defender" && data.Position != "Manager" && data.Position != "Goalkeeper" {
+		sendErrorMessage(w, "addCard", errors.New("invalid input"), "Invalid position. Position must be Forward, Midfielder, Defender, Manager or Goalkeeper.")
+		return
+	}
+	var card Card
+	card.Club = data.Club
+	card.Name = data.Name
+	card.Nationality = data.Nationality
+	card.Position = data.Position
+	id, err := db.Collection("cards").CountDocuments(r.Context(), bson.M{})
+	if err != nil {
+		sendErrorMessage(w, "addCard", err, "Error get size of cards collection. Try to reload page.")
+		return
+	}
+	card.Card_id = int(id + 1)
+	_, err = db.Collection("cards").InsertOne(r.Context(), card)
+	if err != nil {
+		sendErrorMessage(w, "addCard", err, "Error add new card to collection. Try again.")
+		return
+	}
+	newsLetter(w, "New card was added: "+card.Name+".")
+	sendSuccessMessage(w, "addCard", "New card added to collection successfully!", "")
+}
 func market(w http.ResponseWriter, r *http.Request) {
 	tokenString := r.URL.Query().Get("token")
 	token, err := verifyToken(tokenString)
@@ -548,8 +675,6 @@ func cardToCollection(w http.ResponseWriter, r *http.Request) {
 	}
 	sendSuccessMessage(w, "cardToCollection", "Player was transfered to collection successfully!", "")
 }
-
-// /////////////////////////////////////////////////////////////////// Collection page
 func collection(w http.ResponseWriter, r *http.Request) {
 	tokenString := r.URL.Query().Get("token")
 	token, err := verifyToken(tokenString)
@@ -642,115 +767,6 @@ func getTeam(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(players)
 }
-
-// /////////////////////////////////////////////////////////////////// Admin page
-func admin(w http.ResponseWriter, r *http.Request) {
-	tmpl, err := template.ParseFiles("admin.html")
-	if err != nil {
-		logger.WithFields(logrus.Fields{
-			"action": "admin",
-			"status": "error",
-			"error":  err.Error(),
-		}).Error("Error parse file 'admin.html'")
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
-	}
-	logger.WithFields(logrus.Fields{
-		"action": "admin",
-		"status": "success",
-	}).Info("User on the admin page")
-	var users []User = getAllUsers(r)
-	tmpl.ExecuteTemplate(w, "admin.html", users)
-}
-func deleteUser(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodDelete {
-		http.Error(w, "Only DELETE requests are allowed", http.StatusMethodNotAllowed)
-		return
-	}
-	userID := r.URL.Query().Get("id")
-	_, err := db.Collection("users").DeleteOne(r.Context(), bson.M{"user_id": userID})
-	if err != nil {
-		sendErrorMessage(w, "deleteUser", err, "Error deleting user. Try again.")
-		return
-	}
-	_, err = db.Collection("collections").DeleteOne(r.Context(), bson.M{"user_id": userID})
-	if err != nil {
-		sendErrorMessage(w, "deleteUser", err, "Error deleting users collection. Try again.")
-		return
-	}
-	_, err = db.Collection("user_questions").DeleteOne(r.Context(), bson.M{"user_id": userID})
-	if err != nil {
-		sendErrorMessage(w, "deleteUser", err, "Error deleting users questions collection. Try again.")
-		return
-	}
-	_, err = db.Collection("teams").DeleteOne(r.Context(), bson.M{"user_id": userID})
-	if err != nil {
-		sendErrorMessage(w, "deleteUser", err, "Error deleting users team. Try again.")
-		return
-	}
-	_, err = db.Collection("cards_in_deal").DeleteMany(r.Context(), bson.M{"user_id": userID})
-	if err != nil {
-		sendErrorMessage(w, "deleteUser", err, "Error deleting users cards in deal. Try again.")
-		return
-	}
-	sendSuccessMessage(w, "deleteUser", "User was deleted.", "")
-}
-func getAllUsers(r *http.Request) []User {
-	var users []User
-	cursor, err := db.Collection("users").Find(r.Context(), bson.M{})
-	if err != nil {
-		logger.WithFields(logrus.Fields{
-			"action": "getAllUsers",
-			"status": "error",
-			"error":  err.Error(),
-		}).Error("Error fetching users")
-	}
-	if err := cursor.All(r.Context(), &users); err != nil {
-		logger.WithFields(logrus.Fields{
-			"action": "getAllUsers",
-			"status": "error",
-			"error":  err.Error(),
-		}).Error("Error decoding users")
-	}
-	return users
-}
-func addCard(w http.ResponseWriter, r *http.Request) {
-	type newCard struct {
-		Name        string `json:"name"`
-		Nationality string `json:"nationality"`
-		Club        string `json:"club"`
-		Position    string `json:"position"`
-	}
-	var data newCard
-	err := json.NewDecoder(r.Body).Decode(&data)
-	if err != nil {
-		sendErrorMessage(w, "addCard", err, "Error decoding new card data. Try again.")
-		return
-	}
-	if data.Position != "Forward" && data.Position != "Midfielder" && data.Position != "Defender" && data.Position != "Manager" && data.Position != "Goalkeeper" {
-		sendErrorMessage(w, "addCard", errors.New("invalid input"), "Invalid position. Position must be Forward, Midfielder, Defender, Manager or Goalkeeper.")
-		return
-	}
-	var card Card
-	card.Club = data.Club
-	card.Name = data.Name
-	card.Nationality = data.Nationality
-	card.Position = data.Position
-	id, err := db.Collection("cards").CountDocuments(r.Context(), bson.M{})
-	if err != nil {
-		sendErrorMessage(w, "addCard", err, "Error get size of cards collection. Try to reload page.")
-		return
-	}
-	card.Card_id = int(id + 1)
-	_, err = db.Collection("cards").InsertOne(r.Context(), card)
-	if err != nil {
-		sendErrorMessage(w, "addCard", err, "Error add new card to collection. Try again.")
-		return
-	}
-	newsLetter(w, "New card was added: "+card.Name+".")
-	sendSuccessMessage(w, "addCard", "New card added to collection successfully!", "")
-}
-
 var mu sync.Mutex
 var questionChannel = make(chan newQuestion, 100)
 var wg sync.WaitGroup
@@ -960,7 +976,249 @@ func chatHandler(w http.ResponseWriter, r *http.Request) {
 	}).Info("User on the chat page")
 	tmpl.ExecuteTemplate(w, "chat.html", data)
 }
+func allChats(w http.ResponseWriter, r *http.Request) {
+	cursor, err := db.Collection("chats").Find(context.TODO(), bson.M{})
+	if err != nil {
+		sendErrorMessage(w, "allChats", err, "Failed to give all chats. Try again later.")
+		return
+	}
+	var chats []Chat
+	for cursor.Next(context.TODO()) {
+		var chat Chat
+		err := cursor.Decode(&chat)
+		if err != nil {
+			errorMessage := "Error getting chats"
+			logger.WithFields(logrus.Fields{
+				"action": "allChats",
+				"status": "error",
+				"error":  err.Error(),
+			}).Error(errorMessage)
+			return
+		}
+		if (!chat.Is_finished && chat.Id_support == "") {
+			chats = append(chats, chat)
+		}
+	}
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string][]Chat{"chats": chats})
+}
+// func createChat(w http.ResponseWriter, r *http.Request) {
+// 	user_id := r.URL.Query().Get("id")
+// 	chat := Chat{
+// 		Id_client: user_id,
+// 		Is_finished: false,
+// 	}
+// 	_, err := db.Collection("chats").InsertOne(context.TODO(), chat)
+// 	if err != nil {
+// 		errorMessage := "error create chat. try again"
+// 		sendErrorMessage(w, "createChat", errors.New(errorMessage), errorMessage)
+// 		return
+// 	}
+// 	sendSuccessMessage(w, "createChat", "Creating chat successfully", "")
+// }
+// func getChat(w http.ResponseWriter, r *http.Request) {
+// 	chatId := r.URL.Query().Get("chatId")
+// 	id:= r.URL.Query().Get("id")
+// 	var chat Chat
+// 	objID, err := primitive.ObjectIDFromHex(chatId)
+// 	if err != nil {
+// 			sendErrorMessage(w, "getChat", err, "Invalid chat ID.")
+// 			return
+// 	}
+// 	err = db.Collection("chats").FindOne(r.Context(), bson.M{"_id": objID}).Decode(&chat)
+// 	if err != nil {
+// 		sendErrorMessage(w, "getChat", err, "Error getting chat. Try again.")
+// 		return
+// 	}
+// 	chat.Id_support = id
+// 	update := bson.M{"$set": bson.M{"id_support": chat.Id_support}}
+// 	_, err = db.Collection("chats").UpdateOne(r.Context(), bson.M{"_id": objID}, update)
+// 	if err != nil {
+// 		sendErrorMessage(w, "getChat", err, "Error updating chat. Try again.")
+// 		return
+// 	}
+// 	sendSuccessMessage(w, "getChat", "Chat in 'My Chats'", "")
+// }
+func handleAdmin(w http.ResponseWriter, r *http.Request) {
+	id := r.URL.Query().Get("id")
+	chatId := r.URL.Query().Get("chat_id")
+	var chat Chat
+	objID, err := primitive.ObjectIDFromHex(chatId)
+	if err != nil {
+			sendErrorMessage(w, "handleAdmin", err, "Invalid chat ID.")
+			return
+	}
+	err = db.Collection("chats").FindOne(r.Context(), bson.M{"_id": objID}).Decode(&chat)
+	if err != nil {
+		sendErrorMessage(w, "handleAdmin", err, "Error getting chat. Try again.")
+		return
+	}
+	chat.Id_support = id
+	update := bson.M{"$set": bson.M{"id_support": chat.Id_support}}
+	_, err = db.Collection("chats").UpdateOne(r.Context(), bson.M{"_id": objID}, update)
+	if err != nil {
+		sendErrorMessage(w, "handleAdmin", err, "Error updating chat. Try again.")
+		return
+	}
+	conn, err := upgrader.Upgrade(w, r, nil)
+	if err != nil {
+		sendErrorMessage(w, "handleAdmin", errors.New("error create connect. try again"), "error create connect. try again")
+		return
+	}
 
+	mu.Lock()
+	adminConn = conn
+	mu.Unlock()
+
+	defer func() {
+		mu.Lock()
+		adminConn = nil
+		mu.Unlock()
+		conn.Close()
+	}()
+
+	for {
+		_, msg, err := conn.ReadMessage()
+		if err != nil {
+			conn.Close()
+			sendErrorMessage(w, "handleAdmin", errors.New("error read message. try again"), "error read message. try again")
+			break
+		}
+		if string(msg) == "close" {
+			mu.Lock()
+			for userConn := range userConns {
+				if err := userConn.WriteMessage(websocket.TextMessage, []byte("close")); err != nil {
+					sendErrorMessage(w, "handleAdmin", errors.New("error write message. try again"), "error write message. try again")
+					userConn.Close()
+					delete(userConns, userConn)
+				}
+			}
+			mu.Unlock()
+			update := bson.M{"$set": bson.M{"is_finished": true}}
+			_, err = db.Collection("chats").UpdateOne(r.Context(), bson.M{"_id": objID}, update)
+			if err != nil {
+				sendErrorMessage(w, "handleAdmin", err, "Error closing chat. Try again.")
+				return
+			}
+			conn.Close()
+			break
+		}
+		message := Message{
+			Sender:      id,
+			Role: 			 "admin",
+			MessageText: string(msg),
+			Timestamp:   time.Now(),
+		}
+
+		if err := saveMessage(chat.Id_client, message); err != nil {
+			conn.Close()
+			sendErrorMessage(w, "handleAdmin", err, err.Error())
+			break
+		}
+
+		mu.Lock()
+		for userConn := range userConns {
+			if err := userConn.WriteMessage(websocket.TextMessage, msg); err != nil {
+				conn.Close()
+				sendErrorMessage(w, "handleAdmin", errors.New("error write message. try again"), "error write message. try again")
+				userConn.Close()
+				delete(userConns, userConn)
+			}
+		}
+		mu.Unlock()
+	}
+}
+func handleUser(w http.ResponseWriter, r *http.Request) {
+	user_id := r.URL.Query().Get("id")
+	chat := Chat{
+		Id_client: user_id,
+		Is_finished: false,
+		Messages:    []Message{},
+	}
+	_, err := db.Collection("chats").InsertOne(context.TODO(), chat)
+	if err != nil {
+		errorMessage := "error create chat. try again"
+		sendErrorMessage(w, "handleUser", errors.New(errorMessage), errorMessage)
+		return
+	}
+	conn, err := upgrader.Upgrade(w, r, nil)
+	if err != nil {
+		sendErrorMessage(w, "handleUser", errors.New("error create connect. try again"), "error create connect. try again")
+		return
+	}
+	mu.Lock()
+	userConns[conn] = true
+	mu.Unlock()
+
+	defer func() {
+		mu.Lock()
+		delete(userConns, conn)
+		mu.Unlock()
+		conn.Close()
+	}()
+
+	for {
+		_, msg, err := conn.ReadMessage()
+		if err != nil {
+			conn.Close()
+			sendErrorMessage(w, "handleUser", errors.New("error read message. try again"), "error read message. try again")
+			break
+		}
+		if string(msg) == "close" {
+			conn.Close()
+			break
+		}
+
+		message := Message{
+			Sender:      user_id,
+			Role: 			 "user",
+			MessageText: string(msg),
+			Timestamp:   time.Now(),
+		}
+
+		if err := saveMessage(user_id, message); err != nil {
+			conn.Close()
+			sendErrorMessage(w, "handleUser", err, err.Error())
+			break
+		}
+
+		mu.Lock()
+		if adminConn != nil {
+			if err := adminConn.WriteMessage(websocket.TextMessage, msg); err != nil {
+				conn.Close()
+				sendErrorMessage(w, "handleUser", errors.New("error write message. try again"), "error write message. try again")
+				mu.Unlock()
+				continue
+			}
+		}
+		mu.Unlock()
+	}
+}
+func saveMessage(id_client string, msg Message) error {
+	filter := bson.M{"id_client": id_client}
+	update := bson.M{"$push": bson.M{"messages": msg}}
+	result, err := db.Collection("chats").UpdateOne(context.Background(), filter, update)
+	if err != nil {
+		return err
+	}
+
+	if result.MatchedCount == 0 {
+		return fmt.Errorf("no chat found with id_client: %s", id_client)
+	}
+
+	return nil
+}
+func getToken(w http.ResponseWriter, r *http.Request) {
+	cookie, err := r.Cookie("auth-token")
+	if err != nil {
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]string{"token": cookie.Value})
+}
+
+//
 func giveCard(w http.ResponseWriter, r *http.Request) {
 	user_id := r.URL.Query().Get("user_id")
 	answers := r.URL.Query().Get("answers")
@@ -1066,7 +1324,6 @@ func updateCollectionPeriodically(ctx context.Context) {
 		}
 	}
 }
-
 // /////////////////////////////////////////////////////////////////// Home page
 func homePage(w http.ResponseWriter, r *http.Request) {
 	tmpl, err := template.ParseFiles("homepage.html")
@@ -1196,11 +1453,14 @@ func verifyToken(tokenString string) (*jwt.Token, error) {
 }
 func authenticate(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		tokenString := r.URL.Query().Get("token")
-		if tokenString == "" {
-			http.Redirect(w, r, "/", http.StatusSeeOther)
-			return
-		}
+		cookie, err := r.Cookie("auth-token")
+    if err != nil {
+        http.Error(w, "Unauthorized", http.StatusUnauthorized)
+        return
+    }
+
+    tokenString := cookie.Value
+		
 		token, err := verifyToken(tokenString)
 		if err != nil || !token.Valid {
 			http.Redirect(w, r, "/", http.StatusSeeOther)
@@ -1239,17 +1499,21 @@ func handleRequests() {
 	rtr.Handle("/admin", authenticate(http.HandlerFunc(admin)))
 	rtr.HandleFunc("/addCard", addCard)
 	rtr.HandleFunc("/addQuestion", addQuestion)
+	rtr.HandleFunc("/allChats", allChats)
 	rtr.HandleFunc("/deleteUser", deleteUser).Methods("DELETE")
 	// Collection page
 	rtr.Handle("/collection", authenticate(http.HandlerFunc(collection))).Methods("GET")
 	rtr.HandleFunc("/saveTeam", saveTeam)
 	rtr.HandleFunc("/getTeam", getTeam)
+	rtr.HandleFunc("/get-auth-token", getToken)
 	// Daily cards page
 	rtr.Handle("/dailyQuestions", authenticate(http.HandlerFunc(dailyQuestions)))
 	rtr.HandleFunc("/giveCard", giveCard)
 	// Home page
 	rtr.Handle("/homePage", authenticate(http.HandlerFunc(homePage))).Methods("GET")
 	// Chat Page
+	rtr.HandleFunc("/handleAdmin", handleAdmin)
+	rtr.HandleFunc("/handleUser", handleUser)
 	rtr.Handle("/chatHandler", authenticate(http.HandlerFunc(chatHandler))).Methods("GET")
 	//
 	http.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("./css"))))
@@ -1273,5 +1537,4 @@ func main() {
 	ctx := context.Background()
 	go updateCollectionPeriodically(ctx)
 	handleRequests()
-	
 }

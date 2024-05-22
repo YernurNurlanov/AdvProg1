@@ -17,7 +17,7 @@
                 <button class="tab-btn" onclick="showTab('addCards')">Add Cards</button>
                 <button class="tab-btn" onclick="showTab('addQuestions')">Add Questions</button>
                 <button class="tab-btn" onclick="showTab('deleteUser')">Delete User</button>
-                <button class="tab-btn" onclick="showTab('chatSupport')">Chat Support</button>
+                <button class="tab-btn" onclick="showAllChats()">All Chats</button>
             </div>
             <div id="addCards" class="form-container">
                 <form onsubmit="addCards(event)">
@@ -80,81 +80,21 @@
                     <button type="submit" class="submit-btn">Delete</button>
                 </form>
             </div>
-            <div id="MyChats" class="form-container" style="display: none;">
-                <div>
-                    <h2>My Chats</h2>
-                    <div id="chatbox" class="chatbox"></div>
-                    <input type="text" id="message" placeholder="Type your message here..." />
-                    <button id="send" onclick="sendMessage()">Send</button>
-                </div>
-            </div>
-            <div id="AllChats" class="form-container" style="display: none;">
-                <div>
-                    <h2>All Chats</h2>
-                    <div id="chatbox" class="chatbox"></div>
-                    <input type="text" id="message" placeholder="Type your message here..." />
-                    <button id="send" onclick="sendMessage()">Send</button>
-                </div>
+            <div id="allChats" class="form-container" style="display: none;">
             </div>
             <p id="message"></p>
         </div>
     </main>
+		<div id="chatModal" class="modal">
+			<div class="modal-content">
+					<span class="close">&times;</span>
+					<h2>Chat with User</h2>
+					<div id="modalMessages"></div>
+					<input id="modalMessageInput" type="text" placeholder="Type a message...">
+					<button id="modalSendButton">Send</button>
+					<button id="modalCloseButton">Close Chat</button>
+			</div>
+		</div>
     <script src="/script/admin.js"></script>
-    <script>
-        function showTab(tabId) {
-            document.getElementById('addCards').style.display = 'none';
-            document.getElementById('addQuestions').style.display = 'none';
-            document.getElementById('deleteUser').style.display = 'none';
-            document.getElementById('chatSupport').style.display = 'none';
-
-            document.getElementById(tabId).style.display = 'block';
-        }
-
-        function addCards(event) {
-            event.preventDefault();
-            // Add your JavaScript code to handle the form submission for adding cards
-            document.getElementById('message').textContent = 'Card added successfully!';
-        }
-
-        function addQuestions(event) {
-            event.preventDefault();
-            // Add your JavaScript code to handle the form submission for adding questions
-            document.getElementById('message').textContent = 'Question added successfully!';
-        }
-
-        function deleteUser(event) {
-            event.preventDefault();
-            // Add your JavaScript code to handle the form submission for deleting a user
-            document.getElementById('message').textContent = 'User deleted successfully!';
-        }
-
-        // WebSocket setup for chat support
-        const ws = new WebSocket(`ws://${window.location.host}/admin/ws`);
-        
-        ws.onopen = () => {
-            console.log("Connected to the chat server");
-        };
-
-        ws.onmessage = (event) => {
-            const chatbox = document.getElementById("chatbox");
-            const message = document.createElement("div");
-            message.textContent = event.data;
-            chatbox.appendChild(message);
-            chatbox.scrollTop = chatbox.scrollHeight;
-        };
-
-        ws.onclose = () => {
-            console.log("Disconnected from the chat server");
-        };
-
-        function sendMessage() {
-            const messageInput = document.getElementById("message");
-            const message = messageInput.value;
-            if (message) {
-                ws.send(message);
-                messageInput.value = "";
-            }
-        }
-    </script>
 </body>
 </html>

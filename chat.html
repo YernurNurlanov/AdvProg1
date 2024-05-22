@@ -14,45 +14,66 @@
     </style>
 </head>
 <body>
+		<div id="userMessages"></div>
+		<input id="userMessageInput" type="text" placeholder="Type a message...">
+  	<button id="userSendButton">Send</button>
+		<script>
+			function getValue(name) {
+				let cookieArr = document.cookie.split(";");
+				for(let i = 0; i < cookieArr.length; i++) {
+					let cookiePair = cookieArr[i].split("=");
+					if(name == cookiePair[0].trim()) {
+						return decodeURIComponent(cookiePair[1]);
+					}
+				}
+				return null;
+			}
+			var userWs
+			try {
+				userWs = new WebSocket(`ws://localhost:8080/handleUser?id=${getValue("user-data")}`);
+			} 
+			catch (error) {
+					alert('Failed to connect to the WebSocket server.');
+			}
+			userWs.onmessage = (event) => {
+				if (event.data === "close") {
+            handleChatClosure(userWs);
+        } else {
+					const messagesDiv = document.getElementById('userMessages');
+					messagesDiv.innerHTML += `<p>Admin: ${event.data}</p>`;
+				}
+			};
 
-    <div id="chatIDInput">
-        <button id="startChat">Start Chat</button>
-    </div>
-
-    <script>
-        document.getElementById('startChat').addEventListener('click', function() {
-            // Check if the chat box already exists
-            if (!document.getElementById('chatbox')) {
-                // Create chat box
-                var chatbox = document.createElement('div');
-                chatbox.id = 'chatbox';
-                document.body.appendChild(chatbox);
-
-                // Create message input
-                var messageInput = document.createElement('input');
-                messageInput.id = 'message';
-                messageInput.placeholder = 'Type your message...';
-                document.body.appendChild(messageInput);
-
-                // Create send button
-                var sendButton = document.createElement('button');
-                sendButton.id = 'send';
-                sendButton.innerText = 'Send';
-                document.body.appendChild(sendButton);
-
-                // Add event listener for send button
-                sendButton.addEventListener('click', function() {
-                    var message = messageInput.value;
-                    if (message) {
-                        var messageParagraph = document.createElement('p');
-                        messageParagraph.innerText = message;
-                        chatbox.appendChild(messageParagraph);
-                        messageInput.value = '';
+			document.getElementById('userSendButton').onclick = () => {
+				const input = document.getElementById('userMessageInput');
+				const message = input.value;
+				userWs.send(message);
+				input.value = '';
+				
+				const messagesDiv = document.getElementById('userMessages');
+				messagesDiv.innerHTML += `<p>You: ${message}</p>`;
+			};
+			function handleChatClosure(userWs) {
+				if (userWs && userWs.readyState === WebSocket.OPEN) {
+						userWs.send("close");
+						alert("Chat has been closed by the admin.");
+						fetch('/get-auth-token')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
                     }
+                    return response.json();
+                })
+                .then(data => {
+										window.location.href = `/homePage?token=${data.token}`;
+                })
+                .catch(error => {
+                    console.error('There was a problem with your fetch operation:', error);
                 });
-            }
-        });
-    </script>
-
+				} else {
+						console.error("WebSocket connection is not open.");
+				}
+			}
+		</script>
 </body>
 </html>
