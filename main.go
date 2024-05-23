@@ -51,7 +51,7 @@ type Message struct{
 		Role string `bson:"role"`
 		MessageText string `bson:"message"`
 		Timestamp   time.Time `bson:"time"`
-	}
+}
 type User struct {
 	ID       string `bson:"_id,omitempty"`
 	User_id  string `json:"user_id"`
@@ -1002,63 +1002,57 @@ func allChats(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string][]Chat{"chats": chats})
 }
-// func createChat(w http.ResponseWriter, r *http.Request) {
-// 	user_id := r.URL.Query().Get("id")
-// 	chat := Chat{
-// 		Id_client: user_id,
-// 		Is_finished: false,
-// 	}
-// 	_, err := db.Collection("chats").InsertOne(context.TODO(), chat)
-// 	if err != nil {
-// 		errorMessage := "error create chat. try again"
-// 		sendErrorMessage(w, "createChat", errors.New(errorMessage), errorMessage)
-// 		return
-// 	}
-// 	sendSuccessMessage(w, "createChat", "Creating chat successfully", "")
-// }
-// func getChat(w http.ResponseWriter, r *http.Request) {
-// 	chatId := r.URL.Query().Get("chatId")
-// 	id:= r.URL.Query().Get("id")
-// 	var chat Chat
-// 	objID, err := primitive.ObjectIDFromHex(chatId)
-// 	if err != nil {
-// 			sendErrorMessage(w, "getChat", err, "Invalid chat ID.")
-// 			return
-// 	}
-// 	err = db.Collection("chats").FindOne(r.Context(), bson.M{"_id": objID}).Decode(&chat)
-// 	if err != nil {
-// 		sendErrorMessage(w, "getChat", err, "Error getting chat. Try again.")
-// 		return
-// 	}
-// 	chat.Id_support = id
-// 	update := bson.M{"$set": bson.M{"id_support": chat.Id_support}}
-// 	_, err = db.Collection("chats").UpdateOne(r.Context(), bson.M{"_id": objID}, update)
-// 	if err != nil {
-// 		sendErrorMessage(w, "getChat", err, "Error updating chat. Try again.")
-// 		return
-// 	}
-// 	sendSuccessMessage(w, "getChat", "Chat in 'My Chats'", "")
-// }
+func myChats(w http.ResponseWriter, r *http.Request) {
+	id := r.URL.Query().Get("id")
+	cursor, err := db.Collection("chats").Find(context.TODO(), bson.M{"id_support": id})
+	if err != nil {
+		sendErrorMessage(w, "myChats", err, "Failed to give your chats. Try again later.")
+		return
+	}
+	var chats []Chat
+	for cursor.Next(context.TODO()) {
+		var chat Chat
+		err := cursor.Decode(&chat)
+		if err != nil {
+			errorMessage := "Error getting chats"
+			logger.WithFields(logrus.Fields{
+				"action": "myChats",
+				"status": "error",
+				"error":  err.Error(),
+			}).Error(errorMessage)
+			return
+		}
+		if (!chat.Is_finished) {
+			chats = append(chats, chat)
+		}
+	}
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string][]Chat{"chats": chats})
+}
 func handleAdmin(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Query().Get("id")
 	chatId := r.URL.Query().Get("chat_id")
-	var chat Chat
 	objID, err := primitive.ObjectIDFromHex(chatId)
 	if err != nil {
 			sendErrorMessage(w, "handleAdmin", err, "Invalid chat ID.")
 			return
 	}
-	err = db.Collection("chats").FindOne(r.Context(), bson.M{"_id": objID}).Decode(&chat)
-	if err != nil {
-		sendErrorMessage(w, "handleAdmin", err, "Error getting chat. Try again.")
-		return
-	}
-	chat.Id_support = id
-	update := bson.M{"$set": bson.M{"id_support": chat.Id_support}}
-	_, err = db.Collection("chats").UpdateOne(r.Context(), bson.M{"_id": objID}, update)
-	if err != nil {
-		sendErrorMessage(w, "handleAdmin", err, "Error updating chat. Try again.")
-		return
+	var chat Chat
+	filter := bson.M{"id_support": id, "is_finished": false}
+	error := db.Collection("chats").FindOne(r.Context(), filter)
+	if error != nil {
+		err = db.Collection("chats").FindOne(r.Context(), bson.M{"_id": objID}).Decode(&chat)
+		if err != nil {
+			sendErrorMessage(w, "handleAdmin", err, "Error getting chat. Try again.")
+			return
+		}
+		chat.Id_support = id
+		update := bson.M{"$set": bson.M{"id_support": chat.Id_support}}
+		_, err = db.Collection("chats").UpdateOne(r.Context(), bson.M{"_id": objID}, update)
+		if err != nil {
+			sendErrorMessage(w, "handleAdmin", err, "Error updating chat. Try again.")
+			return
+		}
 	}
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
@@ -1130,16 +1124,26 @@ func handleAdmin(w http.ResponseWriter, r *http.Request) {
 }
 func handleUser(w http.ResponseWriter, r *http.Request) {
 	user_id := r.URL.Query().Get("id")
-	chat := Chat{
+	filter := bson.M{"id_client": user_id, "is_finished": false}
+	var chat Chat
+	err := db.Collection("chats").FindOne(r.Context(), filter).Decode(&chat)
+	if err != nil && err != mongo.ErrNoDocuments {
+			sendErrorMessage(w, "handleUser", err, "Error finding chat")
+			return
+	}
+
+	if err == mongo.ErrNoDocuments {
+		chat := Chat{
 		Id_client: user_id,
 		Is_finished: false,
 		Messages:    []Message{},
-	}
-	_, err := db.Collection("chats").InsertOne(context.TODO(), chat)
-	if err != nil {
-		errorMessage := "error create chat. try again"
-		sendErrorMessage(w, "handleUser", errors.New(errorMessage), errorMessage)
-		return
+		}
+		_, err := db.Collection("chats").InsertOne(context.TODO(), chat)
+		if err != nil {
+			errorMessage := "error create chat. try again"
+			sendErrorMessage(w, "handleUser", errors.New(errorMessage), errorMessage)
+			return
+		}
 	}
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
@@ -1195,18 +1199,42 @@ func handleUser(w http.ResponseWriter, r *http.Request) {
 	}
 }
 func saveMessage(id_client string, msg Message) error {
-	filter := bson.M{"id_client": id_client}
+	filter := bson.M{"id_client": id_client,"is_finished": false}
 	update := bson.M{"$push": bson.M{"messages": msg}}
 	result, err := db.Collection("chats").UpdateOne(context.Background(), filter, update)
 	if err != nil {
 		return err
 	}
-
 	if result.MatchedCount == 0 {
 		return fmt.Errorf("no chat found with id_client: %s", id_client)
 	}
-
 	return nil
+}
+func getChat(w http.ResponseWriter, r *http.Request) {
+	user_id := r.URL.Query().Get("id")
+	role := r.URL.Query().Get("role")
+	var chat Chat
+	var filter bson.M
+	if role == "user" {
+		filter = bson.M{"id_client": user_id, "is_finished": false}
+	} else {
+		filter = bson.M{"id_support": user_id, "is_finished": false}
+	}
+	err := db.Collection("chats").FindOne(r.Context(), filter).Decode(&chat)
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			http.Error(w, "No active chat found for the user", http.StatusNotFound)
+		} else {
+			http.Error(w, "Error finding chat", http.StatusInternalServerError)
+		}
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	err = json.NewEncoder(w).Encode(chat.Messages)
+	if err != nil {
+		http.Error(w, "Error encoding response", http.StatusInternalServerError)
+	}
 }
 func getToken(w http.ResponseWriter, r *http.Request) {
 	cookie, err := r.Cookie("auth-token")
@@ -1500,6 +1528,7 @@ func handleRequests() {
 	rtr.HandleFunc("/addCard", addCard)
 	rtr.HandleFunc("/addQuestion", addQuestion)
 	rtr.HandleFunc("/allChats", allChats)
+	rtr.HandleFunc("/myChats", myChats)
 	rtr.HandleFunc("/deleteUser", deleteUser).Methods("DELETE")
 	// Collection page
 	rtr.Handle("/collection", authenticate(http.HandlerFunc(collection))).Methods("GET")
@@ -1514,6 +1543,7 @@ func handleRequests() {
 	// Chat Page
 	rtr.HandleFunc("/handleAdmin", handleAdmin)
 	rtr.HandleFunc("/handleUser", handleUser)
+	rtr.HandleFunc("/getChat", getChat)
 	rtr.Handle("/chatHandler", authenticate(http.HandlerFunc(chatHandler))).Methods("GET")
 	//
 	http.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("./css"))))

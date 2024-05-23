@@ -17,7 +17,8 @@
                 <button class="tab-btn" onclick="showTab('addCards')">Add Cards</button>
                 <button class="tab-btn" onclick="showTab('addQuestions')">Add Questions</button>
                 <button class="tab-btn" onclick="showTab('deleteUser')">Delete User</button>
-                <button class="tab-btn" onclick="showAllChats()">All Chats</button>
+                <button class="tab-btn" onclick="showChats('allChats')">All Chats</button>
+								<button class="tab-btn" onclick="showChats('myChats')">My Chats</button>
             </div>
             <div id="addCards" class="form-container">
                 <form onsubmit="addCards(event)">
@@ -81,6 +82,8 @@
                 </form>
             </div>
             <div id="allChats" class="form-container" style="display: none;">
+            </div>
+						<div id="myChats" class="form-container" style="display: none;">
             </div>
             <p id="message"></p>
         </div>

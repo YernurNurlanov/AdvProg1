@@ -128,7 +128,7 @@ function showTab(tabId) {
 	document.getElementById(tabId).style.display = 'block';
 	document.querySelector(`[onclick="showTab('${tabId}')"]`).classList.add('active');
 }
-function showAllChats(tabId = "allChats") {
+function showChats(tabId) {
 	document.querySelectorAll('.form-container').forEach(function(tab) {
 		tab.style.display = 'none';
 	});
@@ -136,8 +136,8 @@ function showAllChats(tabId = "allChats") {
 			btn.classList.remove('active');
 	});
 	document.getElementById(tabId).style.display = 'block';
-	document.querySelector(`[onclick="showAllChats()"]`).classList.add('active');
-	fetch('/allChats')
+	document.querySelector(`[onclick="showChats('${tabId}')"]`).classList.add('active');
+	fetch(`/${tabId}?id=${getValue("user-data")}`)
 			.then(response => {
 				if (response.ok) {
 						return response.json();
@@ -191,7 +191,27 @@ function openChatModal(chatId) {
 	const modalMessagesDiv = document.getElementById('modalMessages');
 	modalMessagesDiv.innerHTML = `<p>Chat ID: ${chatId}</p>`;
 	modal.style.display = "block";
-
+	fetch(`/getChat?id=${getValue("user-data")}&role=admin`)
+	.then(response => {
+		if (response.ok) {
+				return response.json();
+		} else {
+				throw new Error('Network response was not ok.');
+		}
+	}).then(data => {
+		if(data.error) {
+			alert(data.error);
+		}
+		else {
+			const modalMessagesDiv = document.getElementById('modalMessages');
+			for (i = 0; i < data.length; i++){
+				modalMessagesDiv.innerHTML += `<p>${data[i].Role}: ${data[i].MessageText}</p>`;
+			}
+			
+		}
+	}).catch(error => {
+			console.error('Error fetching chats:', error);
+	});
 	const span = document.getElementsByClassName("close")[0];
 	span.onclick = () => {
 			modal.style.display = "none";
@@ -203,20 +223,19 @@ function openChatModal(chatId) {
 	};
 	adminWs.onmessage = (event) => {
     const modalMessagesDiv = document.getElementById('modalMessages');
-    modalMessagesDiv.innerHTML += `<p>User: ${event.data}</p>`;
+    modalMessagesDiv.innerHTML += `<p>user: ${event.data}</p>`;
 	};
 	document.getElementById('modalSendButton').onclick = () => {
 			const input = document.getElementById('modalMessageInput');
 			const message = input.value;
 			adminWs.send(message);
 			input.value = '';
-
-			// Добавить отправленное сообщение в модальное окно
-			modalMessagesDiv.innerHTML += `<p>You: ${message}</p>`;
+			modalMessagesDiv.innerHTML += `<p>admin: ${message}</p>`;
 	};
 	document.getElementById('modalCloseButton').onclick = () => {
 		closeChat(adminWs);
 		modal.style.display = "none";
+		location.reload();
 	};
 }
 function closeChat(adminWs) {
@@ -225,4 +244,27 @@ function closeChat(adminWs) {
 	} else {
 			console.error("WebSocket connection is not open.");
 	}
+}
+function showMessages(){
+	fetch(`/getChat?id=${getValue("user-data")}`)
+.then(response => {
+	if (response.ok) {
+			return response.json();
+	} else {
+			throw new Error('Network response was not ok.');
+	}
+}).then(data => {
+	if(data.error) {
+		alert(data.error);
+	}
+	else {
+		const modalMessagesDiv = document.getElementById('modalMessages');
+		for (i = 0; i < data.length; i++){
+			modalMessagesDiv.innerHTML += `<p>${data[i].Role}: ${data[i].MessageText}</p>`;
+		}
+		
+	}
+}).catch(error => {
+		console.error('Error fetching chats:', error);
+});
 }
