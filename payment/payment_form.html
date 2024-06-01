@@ -83,21 +83,21 @@
     </div>
 
     <script>
-				function getValue(name) {
-					let cookieArr = document.cookie.split(";");
-					for(let i = 0; i < cookieArr.length; i++) {
-						let cookiePair = cookieArr[i].split("=");
-						if(name == cookiePair[0].trim()) {
-							return decodeURIComponent(cookiePair[1]);
-						}
-					}
-					return null;
-				}
+        function getValue(name) {
+            let cookieArr = document.cookie.split(";");
+            for (let i = 0; i < cookieArr.length; i++) {
+                let cookiePair = cookieArr[i].split("=");
+                if (name == cookiePair[0].trim()) {
+                    return decodeURIComponent(cookiePair[1]);
+                }
+            }
+            return null;
+        }
         document.getElementById('paymentForm').addEventListener('submit', function(event) {
             event.preventDefault();
-						user = getValue("user-data");
+            const user = getValue("user-data");
             const paymentData = {
-								user_id: user,
+                user_id: user,
                 cardNumber: document.getElementById('cardNumber').value,
                 expirationDate: document.getElementById('expirationDate').value,
                 cvv: document.getElementById('cvv').value,
@@ -105,7 +105,7 @@
                 address: document.getElementById('address').value
             };
 
-            fetch('/subscribe', {
+            fetch('http://localhost:8081/subscribe', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -116,7 +116,7 @@
             .then(data => {
                 if (data.success) {
                     alert('Subscription successful!');
-										window.location.href = `/transactionPage`
+                    window.location.href = data.receiptUrl;
                 } else {
                     alert('Subscription failed: ' + data.error);
                 }

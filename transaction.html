@@ -52,8 +52,8 @@
             <h1>User Transactions</h1>
         </div>
     </header>
-		<p>If you did not buy subscription, press button</p>
-		<button onclick="subscribePage()">Subscribe</button>
+    <p>If you did not buy a subscription, press the button</p>
+    <button onclick="subscribePage()">Subscribe</button>
     <div class="container">
         <table>
             <thead>
@@ -70,9 +70,10 @@
     </div>
 
     <script>
-			function subscribePage() {
-				window.location.href = `/paymentForm?token=${getCookie("auth-token")}`;
-			}
+        function subscribePage() {
+            window.location.href = `http://localhost:8081/paymentForm?token=${getCookie("auth-token")}`;
+        }
+
         function getCookie(name) {
             let cookieArr = document.cookie.split(";");
             for (let i = 0; i < cookieArr.length; i++) {
@@ -83,6 +84,7 @@
             }
             return null;
         }
+
         function fetchTransactions() {
             const userId = getCookie('user-data');
             if (!userId) {
@@ -90,24 +92,25 @@
                 return;
             }
             fetch(`/transactions?user_id=${userId}`)
-								.then(response => response.json())
-								.then(data => {
-										const transactionTableBody = document.getElementById('transactionTableBody');
-										transactionTableBody.innerHTML = '';
-										data.transaction;
-										const row = document.createElement('tr');
-										transaction = data.transaction;
-										row.innerHTML = `
-												<td>${transaction.ID}</td>
-												<td>${new Date(transaction.date).toLocaleString()}</td>
-												<td>${transaction.IsCompleted}</td>
-										`;
-										transactionTableBody.appendChild(row);
-								})
+                .then(response => response.json())
+                .then(data => {
+                    const transactionTableBody = document.getElementById('transactionTableBody');
+                    transactionTableBody.innerHTML = '';
+                    data.transaction.forEach(transaction => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${transaction.ID}</td>
+                            <td>${new Date(transaction.date).toLocaleString()}</td>
+                            <td>${transaction.IsCompleted}</td>
+                        `;
+                        transactionTableBody.appendChild(row);
+                    });
+                })
                 .catch(error => {
                     console.error('Error fetching transactions:', error);
                 });
         }
+
         window.onload = fetchTransactions;
     </script>
 </body>

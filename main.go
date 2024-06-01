@@ -1638,7 +1638,7 @@ func handleRequests() {
 	rtr.Handle("/chatHandler", authenticate(http.HandlerFunc(chatHandler))).Methods("GET")
 	// Transaction
 	rtr.HandleFunc("/subscribe", subscribeHandler)
-	rtr.Handle("/paymentForm",  authenticate(http.HandlerFunc(paymentFormHandler)))
+	// rtr.Handle("/paymentForm",  authenticate(http.HandlerFunc(paymentFormHandler)))
 	rtr.Handle("/transactionPage", authenticate(http.HandlerFunc(transactionPageHandler)))
 	rtr.HandleFunc("/transactions", transactions)
 	//

@@ -2112,3 +2112,12 @@ time="2024-05-31T14:29:45+05:00" level=info msg="User on the page." action=trans
 time="2024-05-31T14:29:48+05:00" level=info msg="User on the page." action=paymentFormHandler status=success
 time="2024-05-31T14:32:20+05:00" level=info msg="Data collected successfully, check transactions page, status must be completed" action=subscribeHandler status=success
 time="2024-05-31T14:32:22+05:00" level=info msg="User on the page." action=transactionPageHandler status=success
+time="2024-06-01T12:31:59+05:00" level=info msg="User on the page." action=transactionPageHandler status=success
+time="2024-06-01T12:32:10+05:00" level=info msg="User login successfully" action=login status=success
+time="2024-06-01T12:38:28+05:00" level=info msg="User on the page." action=transactionPageHandler status=success
+time="2024-06-01T12:38:30+05:00" level=error msg="Error parsing template file 'payment_form.html'" action=paymentFormHandler error="open payment_form.html: no such file or directory" status=error
+time="2024-06-01T12:40:35+05:00" level=info msg="User on the page." action=transactionPageHandler status=success
+time="2024-06-01T12:40:36+05:00" level=error msg="Error getting data" action=transactions error="canceled while checking out a connection from connection pool: context canceled; total connections: 1, maxPoolSize: 100, idle connections: 0, wait duration: 636.775125ms" status=error
+time="2024-06-01T12:44:13+05:00" level=error msg="Error getting data" action=transactions error="canceled while checking out a connection from connection pool: context canceled; total connections: 1, maxPoolSize: 100, idle connections: 0, wait duration: 882.849458ms" status=error
+time="2024-06-01T12:49:29+05:00" level=info msg="User on the page." action=transactionPageHandler status=success
+time="2024-06-01T13:04:21+05:00" level=info msg="User on the page." action=transactionPageHandler status=success

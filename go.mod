@@ -15,7 +15,11 @@ require (
 	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df
 )
 
-require golang.org/x/net v0.21.0 // indirect
+require (
+	github.com/SebastiaanKlippert/go-wkhtmltopdf v1.9.2 // indirect
+	github.com/jung-kurt/gofpdf/v2 v2.17.3 // indirect
+	golang.org/x/net v0.21.0 // indirect
+)
 
 require (
 	github.com/blang/semver v3.5.1+incompatible // indirect
