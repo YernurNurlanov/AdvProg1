@@ -11,3 +11,7 @@ function quiz(token) {
 function chat(token) {
 	window.location.href = `/chatHandler?token=${token}`;
 }
+
+function transaction(token) {
+	window.location.href = `/transactionPage`;
+}

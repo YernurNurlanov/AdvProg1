@@ -2060,3 +2060,55 @@ time="2024-05-24T01:33:43+05:00" level=info msg="User on the page." action=regis
 time="2024-05-24T01:34:05+05:00" level=info msg="User login successfully" action=login status=success
 time="2024-05-24T01:34:06+05:00" level=info msg="User on the chat page" action=chatHandler status=success
 time="2024-05-24T01:34:18+05:00" level=error msg="error read message. try again" action=handleUser error="error read message. try again" status=error
+time="2024-05-31T13:43:59+05:00" level=info msg="User on the page." action=registerPage status=success
+time="2024-05-31T13:44:33+05:00" level=info msg="User login successfully" action=login status=success
+time="2024-05-31T13:44:33+05:00" level=info msg="User login successfully" action=login status=success
+time="2024-05-31T13:48:08+05:00" level=info msg="User accessed the collection page" action=collection status=success userID=1
+time="2024-05-31T13:52:19+05:00" level=info msg="User on the page." action=transactionPageHandler status=success
+time="2024-05-31T14:05:47+05:00" level=info msg="User on the page." action=transactionPageHandler status=success
+time="2024-05-31T14:05:49+05:00" level=error msg="Error getting data" action=transactions error="mongo: no documents in result" status=error
+time="2024-05-31T14:05:52+05:00" level=info msg="User on the page." action=paymentFormHandler status=success
+time="2024-05-31T14:06:47+05:00" level=info msg="User on the page." action=paymentFormHandler status=success
+time="2024-05-31T14:07:00+05:00" level=info msg="Data collected successfully, check transactions page, status must be completed" action=subscribeHandler status=success
+time="2024-05-31T14:07:13+05:00" level=info msg="User on the page." action=transactionPageHandler status=success
+time="2024-05-31T14:07:13+05:00" level=error msg="Error getting data" action=transactions error="mongo: no documents in result" status=error
+time="2024-05-31T14:09:25+05:00" level=info msg="User on the page." action=transactionPageHandler status=success
+time="2024-05-31T14:09:25+05:00" level=error msg="Error getting data" action=transactions error="mongo: no documents in result" status=error
+time="2024-05-31T14:09:26+05:00" level=info msg="User on the page." action=paymentFormHandler status=success
+time="2024-05-31T14:09:43+05:00" level=info msg="Data collected successfully, check transactions page, status must be completed" action=subscribeHandler status=success
+time="2024-05-31T14:09:44+05:00" level=info msg="User on the page." action=transactionPageHandler status=success
+time="2024-05-31T14:09:45+05:00" level=error msg="Error getting data" action=transactions error="mongo: no documents in result" status=error
+time="2024-05-31T14:11:04+05:00" level=info msg="User on the page." action=paymentFormHandler status=success
+time="2024-05-31T14:12:06+05:00" level=info msg="User on the page." action=paymentFormHandler status=success
+time="2024-05-31T14:12:19+05:00" level=info msg="Data collected successfully, check transactions page, status must be completed" action=subscribeHandler status=success
+time="2024-05-31T14:13:09+05:00" level=info msg="User on the page." action=transactionPageHandler status=success
+time="2024-05-31T14:13:09+05:00" level=error msg="Error getting data" action=transactions error="mongo: no documents in result" status=error
+time="2024-05-31T14:13:10+05:00" level=info msg="User on the page." action=paymentFormHandler status=success
+time="2024-05-31T14:13:16+05:00" level=info msg="User on the page." action=paymentFormHandler status=success
+time="2024-05-31T14:13:21+05:00" level=info msg="Data collected successfully, check transactions page, status must be completed" action=subscribeHandler status=success
+time="2024-05-31T14:13:26+05:00" level=info msg="User on the page." action=transactionPageHandler status=success
+time="2024-05-31T14:13:26+05:00" level=error msg="Error getting data" action=transactions error="mongo: no documents in result" status=error
+time="2024-05-31T14:15:19+05:00" level=info msg="User on the page." action=paymentFormHandler status=success
+time="2024-05-31T14:15:24+05:00" level=info msg="Data collected successfully, check transactions page, status must be completed" action=subscribeHandler status=success
+time="2024-05-31T14:15:25+05:00" level=info msg="User on the page." action=transactionPageHandler status=success
+time="2024-05-31T14:15:25+05:00" level=error msg="Error getting data" action=transactions error="mongo: no documents in result" status=error
+time="2024-05-31T14:18:39+05:00" level=info msg="User on the page." action=transactionPageHandler status=success
+time="2024-05-31T14:18:40+05:00" level=info msg="User on the page." action=paymentFormHandler status=success
+time="2024-05-31T14:18:49+05:00" level=error msg="Error getting data" action=transactions error="mongo: no documents in result" status=error
+time="2024-05-31T14:18:49+05:00" level=info msg="Data collected successfully, check transactions page, status must be completed" action=subscribeHandler status=success
+time="2024-05-31T14:18:51+05:00" level=info msg="User on the page." action=transactionPageHandler status=success
+time="2024-05-31T14:18:52+05:00" level=error msg="Error getting data" action=transactions error="mongo: no documents in result" status=error
+time="2024-05-31T14:22:33+05:00" level=info msg="User on the page." action=transactionPageHandler status=success
+time="2024-05-31T14:22:34+05:00" level=info msg="User on the page." action=paymentFormHandler status=success
+time="2024-05-31T14:22:34+05:00" level=error msg="Error getting data" action=transactions error="mongo: no documents in result" status=error
+time="2024-05-31T14:22:39+05:00" level=info msg="Data collected successfully, check transactions page, status must be completed" action=subscribeHandler status=success
+time="2024-05-31T14:22:47+05:00" level=info msg="User on the page." action=transactionPageHandler status=success
+time="2024-05-31T14:24:54+05:00" level=info msg="User on the page." action=transactionPageHandler status=success
+time="2024-05-31T14:27:01+05:00" level=info msg="User on the page." action=transactionPageHandler status=success
+time="2024-05-31T14:27:52+05:00" level=info msg="User on the page." action=transactionPageHandler status=success
+time="2024-05-31T14:28:30+05:00" level=info msg="User on the page." action=transactionPageHandler status=success
+time="2024-05-31T14:28:37+05:00" level=info msg="User on the page." action=transactionPageHandler status=success
+time="2024-05-31T14:29:45+05:00" level=info msg="User on the page." action=transactionPageHandler status=success
+time="2024-05-31T14:29:48+05:00" level=info msg="User on the page." action=paymentFormHandler status=success
+time="2024-05-31T14:32:20+05:00" level=info msg="Data collected successfully, check transactions page, status must be completed" action=subscribeHandler status=success
+time="2024-05-31T14:32:22+05:00" level=info msg="User on the page." action=transactionPageHandler status=success

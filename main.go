@@ -16,6 +16,7 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
+
 	"github.com/gorilla/mux"
 	"github.com/gorilla/websocket"
 	"github.com/natefinch/lumberjack"
@@ -1451,7 +1452,97 @@ func sendSuccessMessage(w http.ResponseWriter, action string, message string, to
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]string{"success": message, "token": token})
 }
+// Transaction
+type PaymentForm struct {
+	UserID         string `json:"user_id" bson:"user_id"`
+	CardNumber     string `json:"cardNumber" bson:"cardNumber"`
+	ExpirationDate string `json:"expirationDate" bson:"expirationDate"`
+	CVV            string `json:"cvv" bson:"cvv"`
+	Name           string `json:"name" bson:"name"`
+	Address        string `json:"address" bson:"address"`
+}
 
+type Transaction struct {
+	ID             primitive.ObjectID `bson:"_id,omitempty"`
+	UserID         string             `json:"user_id" bson:"user_id"`
+	CardNumber     string             `json:"cardNumber" bson:"cardNumber"`
+	ExpirationDate string             `json:"expirationDate" bson:"expirationDate"`
+	CVV            string             `json:"cvv" bson:"cvv"`
+	Name           string             `json:"name" bson:"name"`
+	Address        string             `json:"address" bson:"address"`
+	IsCompleted    bool               `json:"is_completed" bson:"is_completed"`
+	Date           time.Time          `json:"date" bson:"date"`
+}
+func paymentFormHandler(w http.ResponseWriter, r *http.Request){
+	tmpl, err := template.ParseFiles("payment_form.html")
+	if err != nil {
+		logger.WithFields(logrus.Fields{
+			"action": "paymentFormHandler",
+			"status": "error",
+			"error":  err.Error(),
+		}).Error("Error parsing template file 'payment_form.html'")
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+	logger.WithFields(logrus.Fields{
+		"action": "paymentFormHandler",
+		"status": "success",
+	}).Info("User on the page.")
+	tmpl.Execute(w, "payment_form.html")
+}
+func transactionPageHandler(w http.ResponseWriter, r *http.Request){
+	tmpl, err := template.ParseFiles("transaction.html")
+	if err != nil {
+		logger.WithFields(logrus.Fields{
+			"action": "transactionPageHandler",
+			"status": "error",
+			"error":  err.Error(),
+		}).Error("Error parsing template file 'transaction.html'")
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+	logger.WithFields(logrus.Fields{
+		"action": "transactionPageHandler",
+		"status": "success",
+	}).Info("User on the page.")
+	tmpl.Execute(w, "transaction.html")
+}
+func subscribeHandler(w http.ResponseWriter, r *http.Request) {
+	var paymentForm PaymentForm
+	err := json.NewDecoder(r.Body).Decode(&paymentForm)
+	if err != nil {
+		sendErrorMessage(w, "subscribeHandler", err, "Error collecting data")
+		return
+	}
+	log.Printf("Received payment form: %+v", paymentForm)
+	transaction := Transaction{
+		UserID: 				paymentForm.UserID,	
+		CardNumber:     paymentForm.CardNumber,
+		ExpirationDate: paymentForm.ExpirationDate,
+		CVV:            paymentForm.CVV,
+		Name:           paymentForm.Name,
+		Address:        paymentForm.Address,
+		IsCompleted: 		true,
+		Date:           time.Now(),
+	}
+	_, err = db.Collection("transactions").InsertOne(context.TODO(), transaction)
+	if err != nil {
+		sendErrorMessage(w, "subscribeHandler", err, "Error set data")
+		return
+	}
+	sendSuccessMessage(w, "subscribeHandler", "Data collected successfully, check transactions page, status must be completed", "")
+}
+func transactions(w http.ResponseWriter, r *http.Request) {
+	user_id := r.URL.Query().Get("user_id")
+	var transaction Transaction
+	err := db.Collection("transactions").FindOne(r.Context(), bson.M{"user_id": user_id}).Decode(&transaction)
+	if err != nil {
+		sendErrorMessage(w, "transactions", err, "Error getting data")
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]Transaction{"transaction": transaction})
+}
 // JWT token
 func generateToken(user *User) (string, error) {
 	token := jwt.New(jwt.SigningMethodHS256)
@@ -1545,6 +1636,11 @@ func handleRequests() {
 	rtr.HandleFunc("/handleUser", handleUser)
 	rtr.HandleFunc("/getChat", getChat)
 	rtr.Handle("/chatHandler", authenticate(http.HandlerFunc(chatHandler))).Methods("GET")
+	// Transaction
+	rtr.HandleFunc("/subscribe", subscribeHandler)
+	rtr.Handle("/paymentForm",  authenticate(http.HandlerFunc(paymentFormHandler)))
+	rtr.Handle("/transactionPage", authenticate(http.HandlerFunc(transactionPageHandler)))
+	rtr.HandleFunc("/transactions", transactions)
 	//
 	http.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("./css"))))
 	http.Handle("/script/", http.StripPrefix("/script/", http.FileServer(http.Dir("./script"))))
