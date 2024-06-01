@@ -14,6 +14,8 @@ go get -u golang.org/x/time/rate
 go get -u github.com/natefinch/lumberjack
 go get -u go.mongodb.org/mongo-driver/mongo
 go get -u github.com/sirupsen/logrus
+go get github.com/jung-kurt/gofpdf/v2
+
 ```
 2. Install MongoDB and make sure that the MongoDB server is running at ```mongodb://127.0.0.1:27017/```
 3. Create a MongoDB database named ```football_tools```, collections named ```cards_in_deals``` and ```users```, and import the files from the ```data``` folder.
